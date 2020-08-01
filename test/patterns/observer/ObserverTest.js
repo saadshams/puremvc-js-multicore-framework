@@ -1,3 +1,14 @@
+/**
+ * Tests PureMVC Observer class.
+ *
+ * <P>Since the Observer encapsulates the interested object's
+ * callback information, there are no getters, only setters.
+ * It is, in effect write-only memory.</P>
+ *
+ * <P>Therefore, the only way to test it is to set the
+ * notification method and context and call the notifyObserver
+ * method.</P>
+ */
 describe("ObserverTest", () => {
 
     /**

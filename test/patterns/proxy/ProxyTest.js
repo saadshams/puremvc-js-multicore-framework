@@ -1,3 +1,9 @@
+/**
+ * Test the PureMVC Proxy class.
+ *
+ * @see IProxy
+ * @see Proxy
+ */
 describe("ProxyTest", () => {
 
     /**

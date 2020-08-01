@@ -1,3 +1,6 @@
+/**
+ * Test the PureMVC Model class.
+ */
 describe("ModelTest", () => {
 
     /**
@@ -11,6 +14,15 @@ describe("ModelTest", () => {
         assert.isNotNull(model, "Expecting instance not null");
     });
 
+    /**
+     * Tests the proxy registration and retrieval methods.
+     *
+     * <P>
+     * Tests <code>registerProxy</code> and <code>retrieveProxy</code> in the same test.
+     * These methods cannot currently be tested separately
+     * in any meaningful way other than to show that the
+     * methods do not throw exception when called. </P>
+     */
     it("should testRegisterAndRetrieveProxy", () => {
         // register a proxy and retrieve it.
         let model = puremvc.Model.getInstance("ModelTestKey2", key => new puremvc.Model(key));

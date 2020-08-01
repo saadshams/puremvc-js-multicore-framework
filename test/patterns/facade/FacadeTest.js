@@ -1,3 +1,9 @@
+/**
+ * Test the PureMVC Facade class.
+ *
+ * @see FacadeTestVO
+ * @see FacadeTestCommand
+ */
 describe("FacadeTest", () => {
 
     /**
@@ -11,6 +17,18 @@ describe("FacadeTest", () => {
         assert.isTrue(facade != null, "");
     });
 
+    /**
+     * Tests Command registration and execution via the Facade.
+     *
+     * <P>This test gets a Multiton Facade instance
+     * and registers the FacadeTestCommand class
+     * to handle 'FacadeTest' Notifications.<P>
+     *
+     * <P>It then sends a notification using the Facade.
+     * Success is determined by evaluating
+     * a property on an object placed in the body of
+     * the Notification, which will be modified by the Command.</P>
+     */
     it("should testRegisterCommandAndSendNotification", () => {
         // Create the Facade, register the FacadeTestCommand to
         // handle 'FacadeTest' notifications
@@ -27,6 +45,18 @@ describe("FacadeTest", () => {
         assert.isTrue(vo.result == 64, "Expecting vo.result == 64");
     });
 
+    /**
+     * Tests Command removal via the Facade.
+     *
+     * <P>This test gets a Multiton Facade instance
+     * and registers the FacadeTestCommand class
+     * to handle 'FacadeTest' Notifications. Then it removes the command.<P>
+     *
+     * <P>It then sends a Notification using the Facade.
+     * Success is determined by evaluating
+     * a property on an object placed in the body of
+     * the Notification, which will NOT be modified by the Command.</P>
+     */
     it("should testRegisterAndRemoveCommandAndSendNotification", () => {
         // Create the Facade, register the FacadeTestCommand to
         // handle 'FacadeTest' events
@@ -44,6 +74,14 @@ describe("FacadeTest", () => {
         assert.isTrue(vo.result != 64, "Expecting vo.result != 64")
     });
 
+    /**
+     * Tests the regsitering and retrieving Model proxies via the Facade.
+     *
+     * <P>Tests <code>registerProxy</code> and <code>retrieveProxy</code> in the same test.
+     * These methods cannot currently be tested separately
+     * in any meaningful way other than to show that the
+     * methods do not throw exception when called.</P>
+     */
     it("should testRegisterAndRetrieveProxy", () => {
         // register a proxy and retrieve it.
         let facade = puremvc.Facade.getInstance("FacadeTestKey4", key => new puremvc.Facade(key));
@@ -64,6 +102,9 @@ describe("FacadeTest", () => {
         assert.isTrue(data[2] == "blue", "Expecting data[2] == 'blue'");
     });
 
+    /**
+     * Tests the removing Proxies via the Facade.
+     */
     it("should testRegisterAndRemoveProxy", () => {
         // register a proxy, remove it, then try to retrieve it
         let facade = puremvc.Facade.getInstance("FacadeTestKey5", key => new puremvc.Facade(key));
@@ -83,6 +124,9 @@ describe("FacadeTest", () => {
         assert.isUndefined(proxy, "Expecting proxy is null");
     });
 
+    /**
+     * Tests registering, retrieving and removing Mediators via the Facade.
+     */
     it("should testRegisterRetrieveAndRemoveMediator", () => {
         // register a mediator, remove it, then try to retrieve it
         let facade = puremvc.Facade.getInstance("FacadeTestKey6", key => new puremvc.Facade(key));
@@ -101,6 +145,9 @@ describe("FacadeTest", () => {
         assert.isTrue(facade.retrieveMediator(puremvc.Mediator.NAME) == null, "Expecting facade.retrieveMediator( Mediator.NAME ) == null )")
     });
 
+    /**
+     * Tests the hasProxy Method
+     */
     it("should testHasProxy", () => {
         // register a Proxy
         let facade = puremvc.Facade.getInstance("FacadeTestKey7", key => new puremvc.Facade(key));
@@ -111,6 +158,9 @@ describe("FacadeTest", () => {
         assert.isTrue(facade.hasProxy("hasProxyTest") == true, "Expecting facade.hasProxy('hasProxyTest') == true");
     });
 
+    /**
+     * Tests the hasMediator Method
+     */
     it("should testHasMediator", () => {
         // register a Mediator
         let facade = puremvc.Facade.getInstance("FacadeTestKey8", key => new puremvc.Facade(key));
@@ -127,6 +177,9 @@ describe("FacadeTest", () => {
         assert.isTrue(facade.hasMediator("facadeHasMediatorTest") == false, "Expecting facade.hasMediator('facadeHasMediatorTest') == false");
     });
 
+    /**
+     * Test hasCommand method.
+     */
     it("should testHasCommand", () => {
         // register the ControllerTestCommand to handle 'hasCommandTest' notes
         let facade = puremvc.Facade.getInstance("FacadeTestKey10", key => new puremvc.Facade(key));
@@ -142,6 +195,9 @@ describe("FacadeTest", () => {
         assert.isTrue(facade.hasCommand("facadeTestCommand") == false, "Expecting facade.hasCommand('facadeHasCommandTest') == false");
     });
 
+    /**
+     * Tests the hasCore and removeCore methods
+     */
     it("should testHasCoreAndRemoveCore", () => {
         // assert that the Facade.hasCore method returns false first
         assert.isTrue(puremvc.Facade.hasCore("FacadeTestKey11") == false, "Expecting facade.hasCore('FacadeTestKey11') == false");

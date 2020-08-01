@@ -1,3 +1,8 @@
+/**
+ * Test the PureMVC Notification class.
+ *
+ * @see Notification
+ */
 describe("NotificationTest", () => {
 
     /**

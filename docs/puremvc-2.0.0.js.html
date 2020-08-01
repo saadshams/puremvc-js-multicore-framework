@@ -1,0 +1,2475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: puremvc-2.0.0.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: puremvc-2.0.0.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>//
+//  PureMVC JS Multicore
+//
+//  Copyright(c) 2020 Saad Shams &lt;saad.shams@puremvc.org>
+//  Your reuse is governed by the Creative Commons Attribution 3.0 License
+//
+
+(scope => {
+    "use strict";
+
+
+/**
+ * The interface definition for a PureMVC Command.
+ *
+ * @interface puremvc.ICommand
+ * @extends puremvc.INotifier
+ */
+function ICommand() {}
+
+ICommand.prototype = new INotifier();
+ICommand.prototype.constructor = IMediator;
+
+/**
+ * Execute the &lt;code>ICommand&lt;/code>'s logic to handle a given &lt;code>INotification&lt;/code>.
+ *
+ * @param {puremvc.INotification} notification an &lt;code>INotification&lt;/code> to handle.
+ */
+ICommand.prototype.execute = (notification) => {
+    throw new Error("Not Implemented");
+};
+
+
+/**
+ * The interface definition for a PureMVC Controller.
+ *
+ * &lt;P>In PureMVC, an &lt;code>IController&lt;/code> implementor
+ * follows the 'Command and Controller' strategy, and
+ * assumes these responsibilities:&lt;/P>
+ *
+ * &lt;UL>
+ * &lt;LI> Remembering which &lt;code>ICommand&lt;/code>s
+ * are intended to handle which &lt;code>INotifications&lt;/code>.&lt;/LI>
+ * &lt;LI> Registering itself as an &lt;code>IObserver&lt;/code> with
+ * the &lt;code>View&lt;/code> for each &lt;code>INotification&lt;/code>
+ * that it has an &lt;code>ICommand&lt;/code> mapping for.&lt;/LI>
+ * &lt;LI> Creating a new instance of the proper &lt;code>ICommand&lt;/code>
+ * to handle a given &lt;code>INotification&lt;/code> when notified by the &lt;code>View&lt;/code>.&lt;/LI>
+ * &lt;LI> Calling the &lt;code>ICommand&lt;/code>'s &lt;code>execute&lt;/code>
+ * method, passing in the &lt;code>INotification&lt;/code>.&lt;/LI>
+ * &lt;/UL>
+ *
+ * @see puremvc.INotification
+ * @see puremvc.ICommand
+ *
+ * @interface puremvc.IController
+ */
+function IController() {}
+
+/**
+ * Register a particular &lt;code>ICommand&lt;/code> class as the handler
+ * for a particular &lt;code>INotification&lt;/code>.
+ *
+ * @param {string} notificationName
+ * @param {factory} factory
+ * @param {function():puremvc.ICommand} factory
+ */
+IController.prototype.registerCommand = (notificationName, factory) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Execute the &lt;code>ICommand&lt;/code> previously registered as the
+ * handler for &lt;code>INotification&lt;/code>s with the given notification name.
+ *
+ * @param {puremvc.INotification} notification the &lt;code>INotification&lt;/code> to execute the associated &lt;code>ICommand&lt;/code> for
+ */
+IController.prototype.executeCommand = (notification) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Remove a previously registered &lt;code>ICommand&lt;/code> to &lt;code>INotification&lt;/code> mapping.
+ *
+ * @param {string} notificationName the name of the &lt;code>INotification&lt;/code> to remove the &lt;code>ICommand&lt;/code> mapping for
+ */
+IController.prototype.removeCommand = (notificationName) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Check if a Command is registered for a given Notification
+ *
+ * @param {string} notificationName
+ * @returns {boolean} whether a Command is currently registered for the given &lt;code>notificationName&lt;/code>.
+ */
+IController.prototype.hasCommand = (notificationName) => {
+    throw new Error("Not Implemented");
+};
+
+
+/**
+ * &lt;P>The interface definition for a PureMVC Facade.&lt;/P>
+ *
+ * &lt;P>The Facade Pattern suggests providing a single
+ * class to act as a central point of communication
+ * for a subsystem. &lt;/P>
+ *
+ * &lt;P>In PureMVC, the Facade acts as an interface between
+ * the core MVC actors (Model, View, Controller) and
+ * the rest of your application.&lt;/P>
+ *
+ * @see puremvc.IModel
+ * @see puremvc.IView
+ * @see puremvc.IController
+ * @see puremvc.ICommand
+ * @see puremvc.INotification
+ *
+ * @interface puremvc.IFacade
+ * @extends puremvc.INotifier
+ */
+function IFacade() {}
+
+IFacade.prototype = new INotifier();
+IFacade.prototype.constructor = IFacade;
+
+/**
+ * Register an &lt;code>IProxy&lt;/code> with the &lt;code>Model&lt;/code> by name.
+ *
+ * @param {puremvc.IProxy} proxy
+ */
+IFacade.prototype.registerProxy = (proxy) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Retrieve a &lt;code>IProxy&lt;/code> from the &lt;code>Model&lt;/code> by name.
+ *
+ * @param {string} proxyName the name of the &lt;code>IProxy&lt;/code> instance to be retrieved.
+ * @returns {puremvc.IProxy} the &lt;code>IProxy&lt;/code> previously regisetered by &lt;code>proxyName&lt;/code> with the &lt;code>Model&lt;/code>.
+ */
+IFacade.prototype.retrieveProxy = (proxyName) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Remove an &lt;code>IProxy&lt;/code> instance from the &lt;code>Model&lt;/code> by name.
+ *
+ * @param {string} proxyName the &lt;code>IProxy&lt;/code> to remove from the &lt;code>Model&lt;/code>.
+ * @return {puremvc.IProxy} the &lt;code>IProxy&lt;/code> that was removed from the &lt;code>Model&lt;/code>
+ */
+IFacade.prototype.removeProxy = (proxyName) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Check if a Proxy is registered
+ *
+ * @param {string} proxyName
+ * @returns {boolean} whether a Proxy is currently registered with the given &lt;code>proxyName&lt;/code>.
+ */
+IFacade.prototype.hasProxy = (proxyName) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Register an &lt;code>ICommand&lt;/code> with the &lt;code>Controller&lt;/code>.
+ *
+ * @param {string} notificationName the name of the &lt;code>INotification&lt;/code> to associate the &lt;code>ICommand&lt;/code> with.
+ * @param {factory} factory a reference to the &lt;code>Class&lt;/code> of the &lt;code>ICommand&lt;/code>.
+ * @param {function():puremvc.ICommand} factory
+ */
+IFacade.prototype.registerCommand = (notificationName, factory) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Remove a previously registered &lt;code>ICommand&lt;/code> to &lt;code>INotification&lt;/code> mapping from the Controller.
+ *
+ * @param {string} notificationName the name of the &lt;code>INotification&lt;/code> to remove the &lt;code>ICommand&lt;/code> mapping for
+ */
+IFacade.prototype.removeCommand = (notificationName) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Check if a Command is registered for a given Notification
+ *
+ * @param {string} notificationName
+ * @returns {boolean} whether a Command is currently registered for the given &lt;code>notificationName&lt;/code>.
+ */
+IFacade.prototype.hasCommand = (notificationName) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Register an &lt;code>IMediator&lt;/code> instance with the &lt;code>View&lt;/code>.
+ *
+ * @param {puremvc.IMediator} mediator a reference to the &lt;code>IMediator&lt;/code> instance
+ */
+IFacade.prototype.registerMediator = (mediator) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Register an &lt;code>IMediator&lt;/code> instance with the &lt;code>View&lt;/code>.
+ *
+ * @param {string} mediatorName the name of the &lt;code>IMediator&lt;/code> instance to retrieve
+ * @returns {puremvc.IMediator} the &lt;code>IMediator&lt;/code> previously registered with the given &lt;code>mediatorName&lt;/code>.
+ */
+IFacade.prototype.retrieveMediator = (mediatorName) =>  {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Remove a &lt;code>IMediator&lt;/code> instance from the &lt;code>View&lt;/code>.
+ *
+ * @param {string} mediatorName name of the &lt;code>IMediator&lt;/code> instance to be removed.
+ * @returns {puremvc.IMediator} the &lt;code>IMediator&lt;/code> instance previously registered with the given &lt;code>mediatorName&lt;/code>.
+ */
+IFacade.prototype.removeMediator = (mediatorName) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Check if a Mediator is registered or not
+ *
+ * @param {string} mediatorName
+ * @returns {boolean} whether a Mediator is registered with the given &lt;code>mediatorName&lt;/code>.
+ */
+IFacade.prototype.hasMediator = (mediatorName) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Notify &lt;code>Observer&lt;/code>s.
+ *
+ * &lt;P>This method is left public mostly for backward
+ * compatibility, and to allow you to send custom
+ * notification classes using the facade.&lt;/P>
+ *
+ * &lt;P>Usually you should just call sendNotification
+ * and pass the parameters, never having to
+ * construct the notification yourself.&lt;/P>
+ *
+ * @param {puremvc.INotification} notification the &lt;code>INotification&lt;/code> to have the &lt;code>View&lt;/code> notify &lt;code>Observers&lt;/code> of.
+ */
+IFacade.prototype.notifyObservers = (notification) => {
+    throw new Error("Not Implemented");
+};
+
+
+/**
+ * The interface definition for a PureMVC Mediator.
+ *
+ * &lt;P>In PureMVC, &lt;code>IMediator&lt;/code> implementors assume these responsibilities:&lt;/P>
+ *
+ * &lt;UL>
+ * &lt;LI>Implement a common method which returns a list of all &lt;code>INotification&lt;/code>s
+ * the &lt;code>IMediator&lt;/code> has interest in.&lt;/LI>
+ * &lt;LI>Implement a notification callback method.&lt;/LI>
+ * &lt;LI>Implement methods that are called when the IMediator is registered or removed from the View.&lt;/LI>
+ * &lt;/UL>
+ *
+ * &lt;P>Additionally, &lt;code>IMediator&lt;/code>s typically:&lt;/P>
+ *
+ * &lt;UL>
+ * &lt;LI>Act as an intermediary between one or more view components such as text boxes or
+ * list controls, maintaining references and coordinating their behavior.&lt;/LI>
+ * &lt;LI>In Flash-based apps, this is often the place where event listeners are
+ * added to view components, and their handlers implemented.&lt;/LI>
+ * &lt;LI>Respond to and generate &lt;code>INotifications&lt;/code>, interacting with of
+ * the rest of the PureMVC app.
+ * &lt;/UL>
+ *
+ * &lt;P>When an &lt;code>IMediator&lt;/code> is registered with the &lt;code>IView&lt;/code>,
+ * the &lt;code>IView&lt;/code> will call the &lt;code>IMediator&lt;/code>'s
+ * &lt;code>listNotificationInterests&lt;/code> method. The &lt;code>IMediator&lt;/code> will
+ * return an &lt;code>Array&lt;/code> of &lt;code>INotification&lt;/code> names which
+ * it wishes to be notified about.&lt;/P>
+ *
+ * &lt;P>The &lt;code>IView&lt;/code> will then create an &lt;code>Observer&lt;/code> object
+ * encapsulating that &lt;code>IMediator&lt;/code>'s (&lt;code>handleNotification&lt;/code>) method
+ * and register it as an Observer for each &lt;code>INotification&lt;/code> name returned by
+ * &lt;code>listNotificationInterests&lt;/code>.&lt;/P>
+ *
+ * @typedef {puremvc.INotifier} INotifier
+ *
+ * @interface puremvc.IMediator
+ * @extends puremvc.INotifier
+ */
+function IMediator() {}
+
+IMediator.prototype = new INotifier();
+IMediator.prototype.constructor = IMediator;
+
+/**
+ * Get the &lt;code>IMediator&lt;/code> instance name
+ *
+ * @returns {string} the &lt;code>IMediator&lt;/code> instance name
+ */
+IMediator.prototype.getMediatorName = () => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Get the &lt;code>IMediator&lt;/code>'s view component.
+ *
+ * @return {Object} the view component
+ */
+IMediator.prototype.geViewComponent = () => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Set the &lt;code>IMediator&lt;/code>'s view component.
+ *
+ * @param {Object} the view component
+ */
+IMediator.prototype.setViewComponent = () => {
+    throw new Error("Not Implemented");
+}
+
+/**
+ * List &lt;code>INotification&lt;/code> interests.
+ *
+ * @returns {[string]} an &lt;code>Array&lt;/code> of the &lt;code>INotification&lt;/code> names this &lt;code>IMediator&lt;/code> has an interest in.
+ */
+IMediator.prototype.listNotificationInterests = () => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Handle an &lt;code>INotification&lt;/code>.
+ *
+ * @param {puremvc.INotification} notification the &lt;code>INotification&lt;/code> to be handled
+ */
+IMediator.prototype.handleNotification = (notification) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Called by the View when the Mediator is registered
+ */
+IMediator.prototype.onRegister = () => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Called by the View when the Mediator is removed
+ */
+IMediator.prototype.onRemove = () => {
+    throw new Error("Not Implemented");
+};
+
+
+/**
+ * The interface definition for a PureMVC Model.
+ *
+ * &lt;P>In PureMVC, &lt;code>IModel&lt;/code> implementors provide
+ * access to &lt;code>IProxy&lt;/code> objects by named lookup.&lt;/P>
+ *
+ * &lt;P>An &lt;code>IModel&lt;/code> assumes these responsibilities:&lt;/P>
+ *
+ * &lt;UL>
+ * &lt;LI>Maintain a cache of &lt;code>IProxy&lt;/code> instances&lt;/LI>
+ * &lt;LI>Provide methods for registering, retrieving, and removing &lt;code>IProxy&lt;/code> instances&lt;/LI>
+ * &lt;/UL>
+ *
+ * @interface puremvc.IModel
+ */
+function IModel() {}
+
+/**
+ * Register an &lt;code>IProxy&lt;/code> instance with the &lt;code>Model&lt;/code>.
+ *
+ * @param {string} proxyName the name to associate with this &lt;code>IProxy&lt;/code> instance.
+ * @param {puremvc.IProxy} proxy an object reference to be held by the &lt;code>Model&lt;/code>.
+ */
+IModel.prototype.registerProxy = (proxy) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Retrieve an &lt;code>IProxy&lt;/code> instance from the Model.
+ *
+ * @param {string} proxyName
+ * @returns {puremvc.IProxy} the &lt;code>IProxy&lt;/code> instance previously registered with the given &lt;code>proxyName&lt;/code>.
+ */
+IModel.prototype.retrieveProxy = (proxyName) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Remove an &lt;code>IProxy&lt;/code> instance from the Model.
+ *
+ * @param {string} proxyName name of the &lt;code>IProxy&lt;/code> instance to be removed.
+ * @returns {puremvc.IProxy} the &lt;code>IProxy&lt;/code> that was removed from the &lt;code>Model&lt;/code>
+ */
+IModel.prototype.removeProxy = (proxyName) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Check if a Proxy is registered
+ *
+ * @param {string} proxyName
+ * @returns {boolean} whether a Proxy is currently registered with the given &lt;code>proxyName&lt;/code>.
+ */
+IModel.prototype.hasProxy = (proxyName) => {
+    throw new Error("Not Implemented");
+};
+
+
+/**
+ * The interface definition for a PureMVC Notification.
+ *
+ * &lt;P>PureMVC does not rely upon underlying event models such
+ * as the one provided with Flash, and ActionScript 3 does
+ * not have an inherent event model.&lt;/P>
+ *
+ * &lt;P>The Observer Pattern as implemented within PureMVC exists
+ * to support event-driven communication between the
+ * application and the actors of the MVC triad.&lt;/P>
+ *
+ * &lt;P>Notifications are not meant to be a replacement for Events
+ * in Flex/Flash/AIR. Generally, &lt;code>IMediator&lt;/code> implementors
+ * place event listeners on their view components, which they
+ * then handle in the usual way. This may lead to the broadcast of &lt;code>Notification&lt;/code>s to
+ * trigger &lt;code>ICommand&lt;/code>s or to communicate with other &lt;code>IMediators&lt;/code>. &lt;code>IProxy&lt;/code> and &lt;code>ICommand&lt;/code>
+ * instances communicate with each other and &lt;code>IMediator&lt;/code>s
+ * by broadcasting &lt;code>INotification&lt;/code>s.&lt;/P>
+ *
+ * &lt;P>A key difference between Flash &lt;code>Event&lt;/code>s and PureMVC
+ * &lt;code>Notification&lt;/code>s is that &lt;code>Event&lt;/code>s follow the
+ * 'Chain of Responsibility' pattern, 'bubbling' up the display hierarchy
+ * until some parent component handles the &lt;code>Event&lt;/code>, while
+ * PureMVC &lt;code>Notification&lt;/code>s follow a 'Publish/Subscribe'
+ * pattern. PureMVC classes need not be related to each other in a
+ * parent/child relationship in order to communicate with one another
+ * using &lt;code>Notification&lt;/code>s.&lt;/P>
+ *
+ * @see puremvc.IView
+ * @see puremvc.IObserver
+ *
+ * @interface puremvc.INotification
+ */
+function INotification() {}
+
+/**
+ * Get the name of the &lt;code>INotification&lt;/code> instance.
+ * No setter, should be set by constructor only
+ *
+ * @returns {string}
+ */
+INotification.prototype.getName = () => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Get the body of the &lt;code>INotification&lt;/code> instance
+ *
+ * @returns {Object}
+ */
+INotification.prototype.getBody = () => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Set the body of the &lt;code>INotification&lt;/code> instance
+ *
+ * @param {Object} body
+ */
+INotification.prototype.setBody = (body) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Get the type of the &lt;code>INotification&lt;/code> instance
+ *
+ * @returns {string}
+ */
+INotification.prototype.getType = () => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Set the type of the &lt;code>INotification&lt;/code> instance
+ *
+ * @param {string} type
+ */
+INotification.prototype.setType = (type) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Get the string representation of the &lt;code>INotification&lt;/code> instance
+ *
+ * @returns {string}
+ */
+INotification.prototype.toString = () => {
+    throw new Error("Not Implemented");
+};
+
+
+/**
+ * The interface definition for a PureMVC Notifier.
+ *
+ * &lt;P>&lt;code>MacroCommand, Command, Mediator&lt;/code> and &lt;code>Proxy&lt;/code>
+ * all have a need to send &lt;code>Notifications&lt;/code>.&lt;/P>
+ *
+ * &lt;P>The &lt;code>INotifier&lt;/code> interface provides a common method called
+ * &lt;code>sendNotification&lt;/code> that relieves implementation code of
+ * the necessity to actually construct &lt;code>Notifications&lt;/code>.&lt;/P>
+ *
+ * &lt;P>The &lt;code>Notifier&lt;/code> class, which all of the above mentioned classes
+ * extend, also provides an initialized reference to the &lt;code>Facade&lt;/code>
+ * Multiton, which is required for the convenience method
+ * for sending &lt;code>Notifications&lt;/code>, but also eases implementation as these
+ * classes have frequent &lt;code>Facade&lt;/code> interactions and usually require
+ * access to the facade anyway.&lt;/P>
+ *
+ * @see puremvc.IFacade
+ * @see puremvc.INotification
+ *
+ * @interface puremvc.INotifier
+ */
+function INotifier() {}
+
+/**
+ * Send a &lt;code>INotification&lt;/code>.
+ *
+ * &lt;P>Convenience method to prevent having to construct new
+ * notification instances in our implementation code.&lt;/P>
+ *
+ * @param {string} notificationName the name of the notification to send
+ * @param {Object} [body] body the body of the notification (optional)
+ * @param {string} [type] type type the type of the notification (optional)
+ */
+INotifier.prototype.sendNotification = (notificationName, body = null, type = "") => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ *
+ * Initialize this INotifier instance.
+ *
+ * &lt;P>This is how a Notifier gets its multitonKey.
+ * Calls to sendNotification or to access the
+ * facade will fail until after this method
+ * has been called.&lt;/P>
+ *
+ * @param {string} key the multitonKey for this INotifier to use
+ */
+INotifier.prototype.initializeNotifier = (key) => {
+    throw new Error("Not Implemented");
+};
+
+
+/**
+ * The interface definition for a PureMVC Observer.
+ *
+ * &lt;P>In PureMVC, &lt;code>IObserver&lt;/code> implementors assume these responsibilities:&lt;/P>
+ *
+ * &lt;UL>
+ * &lt;LI>Encapsulate the notification (callback) method of the interested object.&lt;/LI>
+ * &lt;LI>Encapsulate the notification context (this) of the interested object.&lt;/LI>
+ * &lt;LI>Provide methods for setting the interested object' notification method and context.&lt;/LI>
+ * &lt;LI>Provide a method for notifying the interested object.&lt;/LI>
+ * &lt;/UL>
+ *
+ * &lt;P>PureMVC does not rely upon underlying event
+ * models such as the one provided with Flash,
+ * and ActionScript 3 does not have an inherent
+ * event model.&lt;/P>
+ *
+ * &lt;P>The Observer Pattern as implemented within
+ * PureMVC exists to support event driven communication
+ * between the application and the actors of the
+ * MVC triad.&lt;/P>
+ *
+ * &lt;P>An Observer is an object that encapsulates information
+ * about an interested object with a notification method that
+ * should be called when an &lt;/code>INotification&lt;/code> is broadcast. The Observer then
+ * acts as a proxy for notifying the interested object.
+ *
+ * &lt;P>Observers can receive &lt;code>Notification&lt;/code>s by having their
+ * &lt;code>notifyObserver&lt;/code> method invoked, passing
+ * in an object implementing the &lt;code>INotification&lt;/code> interface, such
+ * as a subclass of &lt;code>Notification&lt;/code>.&lt;/P>
+ *
+ * @see puremvc.IView
+ * @see puremvc.INotification
+ *
+ * @see puremvc.IFacade
+ * @see puremvc.INotification
+ *
+ * @interface puremvc.IObserver
+ */
+function IObserver() {}
+
+/**
+ * Notify the interested object.
+ *
+ * @param {puremvc.INotification} notification the &lt;code>INotification&lt;/code> to pass to the interested object's notification method
+ */
+IObserver.prototype.notifyObserver = (notification) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Compare the given object to the notification context object.
+ *
+ * @param {Object} context the object to compare.
+ * @returns {boolean} indicating if the notification context and the object are the same.
+ */
+IObserver.prototype.compareNotifyContext = (context) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Set the notification method.
+ *
+ * &lt;P>The notification method should take one parameter of type &lt;code>INotification&lt;/code>&lt;/P>
+ *
+ * @param {consumer} notifyMethod the notification (callback) method of the interested object
+ * @param {function(puremvc.INotification):void} notifyMethod
+ */
+IObserver.prototype.setNotifyMethod = (notifyMethod) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Set the notification context.
+ *
+ * @param {Object} notifyContext the notification context (this) of the interested object
+ */
+IObserver.prototype.setNotifyContext = (notifyContext) => {
+    throw new Error("Not Implemented");
+};
+
+
+/**
+ * The interface definition for a PureMVC Proxy.
+ *
+ * &lt;P>In PureMVC, &lt;code>IProxy&lt;/code> implementors assume these responsibilities:&lt;/P>
+ *
+ * &lt;UL>
+ * &lt;LI>Implement a common method which returns the name of the Proxy.&lt;/LI>
+ * &lt;LI>Provide methods for setting and getting the data object.&lt;/LI>
+ * &lt;/UL>
+ *
+ * &lt;P>Additionally, &lt;code>IProxy&lt;/code>s typically:&lt;/P>
+ *
+ * &lt;UL>
+ * &lt;LI>Maintain references to one or more pieces of model data.&lt;/LI>
+ * &lt;LI>Provide methods for manipulating that data.&lt;/LI>
+ * &lt;LI>Generate &lt;code>INotifications&lt;/code> when their model data changes.&lt;/LI>
+ * &lt;LI>Expose their name as a &lt;code>public static const&lt;/code> called &lt;code>NAME&lt;/code>, if they are not instantiated multiple times.&lt;/LI>
+ * &lt;LI>Encapsulate interaction with local or remote services used to fetch and persist model data.&lt;/LI>
+ * &lt;/UL>
+ *
+ * @interface puremvc.IProxy
+ * @extends puremvc.INotifier
+ */
+function IProxy() {}
+
+IProxy.prototype = new INotifier();
+IProxy.prototype.constructor = IProxy;
+
+/**
+ * Get the Proxy name
+ *
+ * @returns {string} the Proxy instance name
+ */
+IProxy.prototype.getProxyName = () => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Set the data object
+ *
+ * @param {Object} data the data object
+ */
+IProxy.prototype.setData = (data) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Get the data object
+ *
+ * @returns {Object} the data as type Object
+ */
+IProxy.prototype.getData = () => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Called by the Model when the Proxy is registered
+ */
+IProxy.prototype.onRegister = () => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Called by the Model when the Proxy is removed
+ */
+IProxy.prototype.onRemove = () => {
+    throw new Error("Not Implemented");
+};
+
+
+/**
+ * The interface definition for a PureMVC View.
+ *
+ * &lt;P>In PureMVC, &lt;code>IView&lt;/code> implementors assume these responsibilities:&lt;/P>
+ *
+ * &lt;P>In PureMVC, the &lt;code>View&lt;/code> class assumes these responsibilities:&lt;/P>
+ *
+ * &lt;UL>
+ * &lt;LI>Maintain a cache of &lt;code>IMediator&lt;/code> instances.&lt;/LI>
+ * &lt;LI>Provide methods for registering, retrieving, and removing &lt;code>IMediators&lt;/code>.&lt;/LI>
+ * &lt;LI>Managing the observer lists for each &lt;code>INotification&lt;/code> in the application.&lt;/LI>
+ * &lt;LI>Providing a method for attaching &lt;code>IObservers&lt;/code> to an &lt;code>INotification&lt;/code>'s observer list.&lt;/LI>
+ * &lt;LI>Providing a method for broadcasting an &lt;code>INotification&lt;/code>.&lt;/LI>
+ * &lt;LI>Notifying the &lt;code>IObservers&lt;/code> of a given &lt;code>INotification&lt;/code> when it broadcast.&lt;/LI>
+ * &lt;/UL>
+ *
+ * @see puremvc.IMediator
+ * @see puremvc.IObserver
+ * @see puremvc.INotification
+ *
+ * @interface puremvc.IView
+ */
+function IView() {}
+
+/**
+ * Register an &lt;code>IObserver&lt;/code> to be notified
+ * of &lt;code>INotifications&lt;/code> with a given name.
+ *
+ * @param {string} notificationName the name of the &lt;code>INotifications&lt;/code> to notify this &lt;code>IObserver&lt;/code> of
+ * @param {puremvc.IObserver} observer the &lt;code>IObserver&lt;/code> to register
+ */
+IView.prototype.registerObserver = (notificationName, observer) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * &lt;P>Remove a group of observers from the observer list for a given Notification name.&lt;/P>
+ *
+ * @param {string} notificationName which observer list to remove from
+ * @param {Object} notifyContext removed the observers with this object as their notifyContext
+ */
+IView.prototype.removeObserver = (notificationName, notifyContext) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Notify the &lt;code>IObservers&lt;/code> for a particular &lt;code>INotification&lt;/code>.
+ *
+ * &lt;P>All previously attached &lt;code>IObservers&lt;/code> for this &lt;code>INotification&lt;/code>'s
+ * list are notified and are passed a reference to the &lt;code>INotification&lt;/code> in
+ * the order in which they were registered.&lt;/P>
+ *
+ * @param {puremvc.INotification} notification the &lt;code>INotification&lt;/code> to notify &lt;code>IObservers&lt;/code> of.
+ */
+IView.prototype.notifyObservers = (notification) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Register an &lt;code>IMediator&lt;/code> instance with the &lt;code>View&lt;/code>.
+ *
+ * &lt;P>Registers the &lt;code>IMediator&lt;/code> so that it can be retrieved by name,
+ * and further interrogates the &lt;code>IMediator&lt;/code> for its
+ * &lt;code>INotification&lt;/code> interests.&lt;/P>
+ *
+ * &lt;P>If the &lt;code>IMediator&lt;/code> returns any &lt;code>INotification&lt;/code>
+ * names to be notified about, an &lt;code>Observer&lt;/code> is created encapsulating
+ * the &lt;code>IMediator&lt;/code> instance's &lt;code>handleNotification&lt;/code> method
+ * and registering it as an &lt;code>Observer&lt;/code> for all &lt;code>INotifications&lt;/code> the
+ * &lt;code>IMediator&lt;/code> is interested in.&lt;/P>
+ *
+ * @param {puremvc.IMediator} mediator a reference to the &lt;code>IMediator&lt;/code> instance
+ */
+IView.prototype.registerMediator = (mediator) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Retrieve an &lt;code>IMediator&lt;/code> from the &lt;code>View&lt;/code>.
+ *
+ * @param {string} mediatorName the name of the &lt;code>IMediator&lt;/code> instance to retrieve.
+ * @returns {puremvc.IMediator} the &lt;code>IMediator&lt;/code> instance previously registered with the given &lt;code>mediatorName&lt;/code>.
+ */
+IView.prototype.retrieveMediator = (mediatorName) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Remove an &lt;code>IMediator&lt;/code> from the &lt;code>View&lt;/code>.
+ *
+ * @param {string} mediatorName name of the &lt;code>IMediator&lt;/code> instance to be removed.
+ * @returns {puremvc.IMediator} the &lt;code>IMediator&lt;/code> that was removed from the &lt;code>View&lt;/code>
+ */
+IView.prototype.removeMediator = (mediatorName) => {
+    throw new Error("Not Implemented");
+};
+
+/**
+ * Check if a Mediator is registered or not
+ *
+ * @param {string} mediatorName
+ * @returns {boolean} whether a Mediator is registered with the given &lt;code>mediatorName&lt;/code>.
+ */
+IView.prototype.hasMediator = (mediatorName) => {
+    throw new Error("Not Implemented");
+};
+
+
+/**
+ * A Multiton &lt;code>IController&lt;/code> implementation.
+ *
+ * &lt;P>In PureMVC, the &lt;code>Controller&lt;/code> class follows the
+ * 'Command and Controller' strategy, and assumes these
+ * responsibilities:&lt;/P>
+ *
+ * &lt;UL>
+ * &lt;LI> Remembering which &lt;code>ICommand&lt;/code>s
+ * are intended to handle which &lt;code>INotifications&lt;/code>.&lt;/LI>
+ * &lt;LI> Registering itself as an &lt;code>IObserver&lt;/code> with
+ * the &lt;code>View&lt;/code> for each &lt;code>INotification&lt;/code>
+ * that it has an &lt;code>ICommand&lt;/code> mapping for.&lt;/LI>
+ * &lt;LI> Creating a new instance of the proper &lt;code>ICommand&lt;/code>
+ * to handle a given &lt;code>INotification&lt;/code> when notified by the &lt;code>View&lt;/code>.&lt;/LI>
+ * &lt;LI> Calling the &lt;code>ICommand&lt;/code>'s &lt;code>execute&lt;/code>
+ * method, passing in the &lt;code>INotification&lt;/code>.&lt;/LI>
+ * &lt;/UL>
+ *
+ * &lt;P>Your application must register &lt;code>ICommands&lt;/code> with the
+ * Controller.&lt;/P>
+ *
+ * &lt;P>The simplest way is to subclass &lt;/code>Facade&lt;/code>,
+ * and use its &lt;code>initializeController&lt;/code> method to add your
+ * registrations.&lt;/P>
+ *
+ * @see puremvc.View View
+ * @see puremvc.Observer Observer
+ * @see puremvc.Notification Notification
+ * @see puremvc.SimpleCommand SimpleCommand
+ * @see puremvc.MacroCommand MacroCommand
+ *
+ * @class puremvc.Controller
+ * @implements puremvc.IController
+ */
+class Controller {
+
+    /**
+     * Constructor.
+     *
+     * &lt;P>This &lt;code>IController&lt;/code> implementation is a Multiton,
+     * so you should not call the constructor
+     * directly, but instead call the static Factory method,
+     * passing the unique key for this instance
+     * &lt;code>Controller.getInstance( multitonKey )&lt;/code>&lt;/P>
+     *
+     * @throws {Error} Error if instance for this Multiton key has already been constructed
+     *
+     * @constructor
+     * @param {string} key
+     */
+    constructor(key) {
+        if (Controller.instanceMap[key] != null) throw new Error(Controller.MULTITON_MSG);
+        /** @protected {string} */
+        this.multitonKey = key;
+        Controller.instanceMap.set(this.multitonKey, this);
+        /** @protected {Map&lt;string, function():puremvc.ICommand>} */
+        this.commandMap = new Map();
+        this.initializeController();
+    }
+
+    /**
+     * Initialize the Multiton &lt;code>Controller&lt;/code> instance.
+     *
+     * &lt;P>Called automatically by the constructor.&lt;/P>
+     *
+     * &lt;P>Note that if you are using a subclass of &lt;code>View&lt;/code>
+     * in your application, you should &lt;i>also&lt;/i> subclass &lt;code>Controller&lt;/code>
+     * and override the &lt;code>initializeController&lt;/code> method in the
+     * following way:&lt;/P>
+     *
+     * &lt;pre>&lt;code>
+     *		// ensure that the Controller is talking to my IView implementation
+     *		initializeController( )
+     *		{
+     *			this.view = MyView.getInstance(this.multitonKey, (key) => new MyView(key));
+     *		}
+     * &lt;/code>&lt;/pre>
+     *
+     */
+    initializeController() {
+        /** @protected **/
+        this.view = View.getInstance(this.multitonKey, (key) => new View(key));
+    }
+
+    /**
+     * &lt;code>Controller&lt;/code> Multiton Factory method.
+     *
+     * @static
+     * @param {string} key
+     * @param {factory} factory
+     * @param {function(string):puremvc.IController} factory
+     * @returns {puremvc.IController} the Multiton instance of &lt;code>Controller&lt;/code>
+     */
+    static getInstance(key, factory) {
+        if (this.instanceMap.get(key) == null) this.instanceMap.set(key, factory(key));
+        return this.instanceMap.get(key);
+    }
+
+    /**
+     * &lt;P>If an &lt;code>ICommand&lt;/code> has previously been registered
+     * to handle a the given &lt;code>INotification&lt;/code>, then it is executed.&lt;/P>
+     *
+     * @param {puremvc.INotification} notification an &lt;code>INotification&lt;/code>
+     */
+    executeCommand(notification) {
+        let factory = this.commandMap.get(notification.name);
+        if (factory == null) return;
+
+        let commandInstance = factory();
+        commandInstance.initializeNotifier(this.multitonKey);
+        commandInstance.execute(notification);
+    }
+
+    /**
+     * &lt;P>Register a particular &lt;code>ICommand&lt;/code> class as the handler
+     * for a particular &lt;code>INotification&lt;/code>.&lt;/P>
+     *
+     * &lt;P>If an &lt;code>ICommand&lt;/code> has already been registered to
+     * handle &lt;code>INotification&lt;/code>s with this name, it is no longer
+     * used, the new &lt;code>ICommand&lt;/code> is used instead.&lt;/P>
+     *
+     * &lt;P>The Observer for the new ICommand is only created if this the
+     * first time an ICommand has been regisered for this Notification name.&lt;/P>
+     *
+     * @param notificationName the name of the &lt;code>INotification&lt;/code>
+     * @param {factory} factory the &lt;code>Class&lt;/code> of the &lt;code>ICommand&lt;/code>
+     * @param {function():puremvc.ICommand} factory
+     */
+    registerCommand(notificationName, factory) {
+        if (this.commandMap.get(notificationName) == null) {
+            this.view.registerObserver(notificationName, new Observer(this.executeCommand, this));
+        }
+        this.commandMap.set(notificationName, factory);
+    }
+
+    /**
+     * Check if a Command is registered for a given Notification
+     *
+     * @param {string} notificationName
+     * @return {boolean} whether a Command is currently registered for the given &lt;code>notificationName&lt;/code>.
+     */
+    hasCommand(notificationName) {
+        return this.commandMap.has(notificationName);
+    }
+
+    /**
+     * Remove a previously registered &lt;code>ICommand&lt;/code> to &lt;code>INotification&lt;/code> mapping.
+     *
+     * @param {string} notificationName the name of the &lt;code>INotification&lt;/code> to remove the &lt;code>ICommand&lt;/code> mapping for
+     */
+    removeCommand(notificationName) {
+        // if the Command is registered...
+        if(this.hasCommand(notificationName)) {
+            // remove the observer
+            this.view.removeObserver(notificationName, this);
+
+            // remove the command
+            this.commandMap.delete(notificationName)
+        }
+    }
+
+    /**
+     * Remove an IController instance
+     *
+     * @static
+     * @param {string} key of IController instance to remove
+     */
+    static removeController(key) {
+        Controller.instanceMap.delete(key);
+    }
+
+    /**
+     * Multiton instance
+     *
+     * @static
+     * @type {Map&lt;string, puremvc.IController>}
+     */
+    static instanceMap = new Map();
+
+    /**
+     * Message Constants
+     *
+     * @static
+     * @type {string}
+     */
+    static get MULTITON_MSG() { return "Controller instance for this Multiton key already constructed!" };
+
+}
+
+
+/**
+ * A Multiton &lt;code>IModel&lt;/code> implementation.
+ *
+ * &lt;P>In PureMVC, the &lt;code>Model&lt;/code> class provides
+ * access to model objects (Proxies) by named lookup.
+ *
+ * &lt;P>The &lt;code>Model&lt;/code> assumes these responsibilities:&lt;/P>
+ *
+ * &lt;UL>
+ * &lt;LI>Maintain a cache of &lt;code>IProxy&lt;/code> instances.&lt;/LI>
+ * &lt;LI>Provide methods for registering, retrieving, and removing
+ * &lt;code>IProxy&lt;/code> instances.&lt;/LI>
+ * &lt;/UL>
+ *
+ * &lt;P>Your application must register &lt;code>IProxy&lt;/code> instances
+ * with the &lt;code>Model&lt;/code>. Typically, you use an
+ * &lt;code>ICommand&lt;/code> to create and register &lt;code>IProxy&lt;/code>
+ * instances once the &lt;code>Facade&lt;/code> has initialized the Core
+ * actors.&lt;/p>
+ *
+ * @see puremvc.Proxy Proxy
+ * @see puremvc.IProxy IProxy
+ *
+ * @class puremvc.Model
+ * @implements puremvc.IModel
+ */
+class Model {
+
+    /**
+     * Constructor.
+     *
+     * &lt;P>This &lt;code>IModel&lt;/code> implementation is a Multiton,
+     * so you should not call the constructor
+     * directly, but instead call the static Multiton
+     * Factory method &lt;code>Model.getInstance( multitonKey )&lt;/code>
+     *
+     * @constructor
+     * @param {string} key
+     *
+     * @throws {Error} Error if instance for this Multiton key instance has already been constructed
+     */
+    constructor(key) {
+        if (Model.instanceMap.get(key) != null) throw new Error(Model.MULTITON_MSG);
+        /** @protected {string} */
+        this.multitonKey = key;
+        Model.instanceMap.set(this.multitonKey, this);
+        /** @protected {Map&lt;string, puremvc.IProxy>} */
+        this.proxyMap = new Map();
+        this.initializeModel();
+    }
+
+    /**
+     * Initialize the &lt;code>Model&lt;/code> instance.
+     *
+     * &lt;P>Called automatically by the constructor, this
+     * is your opportunity to initialize the Multiton
+     * instance in your subclass without overriding the
+     * constructor.&lt;/P>
+     *
+     */
+    initializeModel() {
+
+    }
+
+    /**
+     * &lt;code>Model&lt;/code> Multiton Factory method.
+     *
+     * @static
+     * @param {string} key
+     * @param {factory} factory
+     * @param {function(string):puremvc.IModel} factory
+     * @returns {puremvc.IModel} the instance for this Multiton key
+     */
+    static getInstance(key, factory) {
+        if (this.instanceMap.get(key) == null) this.instanceMap.set(key, factory(key));
+        return this.instanceMap.get(key);
+    }
+
+    /**
+     * Register an &lt;code>IProxy&lt;/code> with the &lt;code>Model&lt;/code>.
+     *
+     * @param {puremvc.IProxy} proxy an &lt;code>IProxy&lt;/code> to be held by the &lt;code>Model&lt;/code>.
+     */
+    registerProxy(proxy) {
+        proxy.initializeNotifier(this.multitonKey);
+        this.proxyMap.set(proxy.getProxyName(), proxy);
+        proxy.onRegister();
+    }
+
+    /**
+     * Retrieve an &lt;code>IProxy&lt;/code> from the &lt;code>Model&lt;/code>.
+     *
+     * @param {string} proxyName
+     * @returns {puremvc.IProxy} the &lt;code>IProxy&lt;/code> instance previously registered with the given &lt;code>proxyName&lt;/code>.
+     */
+    retrieveProxy(proxyName) {
+        return this.proxyMap.get(proxyName);
+    }
+
+    /**
+     * Check if a Proxy is registered
+     *
+     * @param {string} proxyName
+     * @returns {boolean} whether a Proxy is currently registered with the given &lt;code>proxyName&lt;/code>.
+     */
+    hasProxy(proxyName) {
+        return this.proxyMap.has(proxyName);
+    }
+
+    /**
+     * Remove an &lt;code>IProxy&lt;/code> from the &lt;code>Model&lt;/code>.
+     *
+     * @param {string} proxyName name of the &lt;code>IProxy&lt;/code> instance to be removed.
+     * @returns {puremvc.IProxy} the &lt;code>IProxy&lt;/code> that was removed from the &lt;code>Model&lt;/code>
+     */
+    removeProxy(proxyName) {
+        let proxy = this.proxyMap.get(proxyName);
+        if (proxy != null) {
+            this.proxyMap.delete(proxyName);
+            proxy.onRemove();
+        }
+        return proxy;
+    }
+
+    /**
+     * Remove an IModel instance
+     *
+     * @static
+     * @param key
+     */
+    static removeModel(key) {
+        Model.instanceMap.delete(key);
+    }
+
+    /**
+     * Multiton instance
+     *
+     * @static
+     * @type {Map&lt;string, puremvc.IModel>}
+     */
+    static instanceMap = new Map();
+
+    /**
+     * @static
+     * @type {string}
+     */
+    static get MULTITON_MSG() { return "Model instance for this Multiton key already constructed!" };
+}
+
+
+/**
+ * A Multiton &lt;code>IView&lt;/code> implementation.
+ *
+ * &lt;P>In PureMVC, the &lt;code>View&lt;/code> class assumes these responsibilities:&lt;/P>
+ *
+ * &lt;UL>
+ * &lt;LI>Maintain a cache of &lt;code>IMediator&lt;/code> instances.&lt;/LI>
+ * &lt;LI>Provide methods for registering, retrieving, and removing &lt;code>IMediators&lt;/code>.&lt;/LI>
+ * &lt;LI>Notifiying &lt;code>IMediators&lt;/code> when they are registered or removed.&lt;/LI>
+ * &lt;LI>Managing the observer lists for each &lt;code>INotification&lt;/code> in the application.&lt;/LI>
+ * &lt;LI>Providing a method for attaching &lt;code>IObservers&lt;/code> to an &lt;code>INotification&lt;/code>'s observer list.&lt;/LI>
+ * &lt;LI>Providing a method for broadcasting an &lt;code>INotification&lt;/code>.&lt;/LI>
+ * &lt;LI>Notifying the &lt;code>IObservers&lt;/code> of a given &lt;code>INotification&lt;/code> when it broadcast.&lt;/LI>
+ * &lt;/UL>
+ *
+ * @see puremvc.Mediator Mediator
+ * @see puremvc.Observer Observer
+ * @see puremvc.Notification Notification
+ *
+ * @class puremvc.View
+ * @implements puremvc.IView
+ */
+class View {
+
+    /**
+     * Constructor.
+     *
+     * &lt;P>This &lt;code>IView&lt;/code> implementation is a Multiton,
+     * so you should not call the constructor
+     * directly, but instead call the static Multiton
+     * Factory method &lt;code>View.getInstance( multitonKey )&lt;/code>
+     *
+     * @constructor
+     * @param {string} key
+     *
+     * @throws {Error} Error if instance for this Multiton key has already been constructed
+     */
+    constructor(key) {
+        if (View.instanceMap.get(key) != null) throw new Error(View.MULTITON_MSG);
+        /** @protected {string} */
+        this.multitonKey = key;
+        View.instanceMap.set(this.multitonKey, this);
+        /** @protected {Map&lt;string, puremvc.IMediator>} */
+        this.mediatorMap = new Map();
+        /** @protected {Map&lt;string, [puremvc.IObserver]>} */
+        this.observerMap = new Map();
+        this.initializeView();
+    }
+
+    /**
+     * &lt;P>Initialize the Multiton View instance.&lt;/P>
+     *
+     * &lt;P>Called automatically by the constructor, this
+     * is your opportunity to initialize the Multiton
+     * instance in your subclass without overriding the
+     * constructor.&lt;/P>
+     */
+    initializeView() {
+
+    }
+
+    /**
+     * View Multiton factory method.
+     *
+     * @static
+     * @param {string} key
+     * @param {factory} factory
+     * @param {function(string):puremvc.IView} factory
+     * @returns {puremvc.IView} the Multiton instance of &lt;code>View&lt;/code>
+     */
+    static getInstance(key, factory) {
+        if (this.instanceMap.get(key) == null) this.instanceMap.set(key, factory(key));
+        return this.instanceMap.get(key);
+    }
+
+    /**
+     * &lt;P>Register an &lt;code>IObserver&lt;/code> to be notified
+     * of &lt;code>INotifications&lt;/code> with a given name.&lt;/P>
+     *
+     * @param {string} notificationName the name of the &lt;code>INotifications&lt;/code> to notify this &lt;code>IObserver&lt;/code> of
+     * @param {puremvc.IObserver} observer the &lt;code>IObserver&lt;/code> to register
+     */
+    registerObserver(notificationName, observer) {
+        if (this.observerMap.get(notificationName) != null) {
+            let observers = this.observerMap.get(notificationName);
+            observers.push(observer);
+        } else {
+            this.observerMap.set(notificationName, new Array(observer));
+        }
+    }
+
+    /**
+     * &lt;P>Notify the &lt;code>IObservers&lt;/code> for a particular &lt;code>INotification&lt;/code>.&lt;/P>
+     *
+     * &lt;P>All previously attached &lt;code>IObservers&lt;/code> for this &lt;code>INotification&lt;/code>'s
+     * list are notified and are passed a reference to the &lt;code>INotification&lt;/code> in
+     * the order in which they were registered.&lt;/P>
+     *
+     * @param {puremvc.INotification} notification the &lt;code>INotification&lt;/code> to notify &lt;code>IObservers&lt;/code> of.
+     */
+    notifyObservers(notification) {
+        if (this.observerMap.has(notification.name)) {
+            // Copy observers from reference array to working array,
+            // since the reference array may change during the notification loop
+            let observers = this.observerMap.get(notification.name).slice();
+
+            // Notify Observers from the working array
+            for(let i = 0; i &lt; observers.length; i++) {
+                observers[i].notifyObserver(notification);
+            }
+        }
+    }
+
+    /**
+     * &lt;P>Remove the observer for a given notifyContext from an observer list for a given Notification name.&lt;/P>
+     *
+     * @param {string} notificationName which observer list to remove from
+     * @param {Object} notifyContext remove the observer with this object as its notifyContext
+     */
+    removeObserver(notificationName, notifyContext) {
+        // the observer list for the notification under inspection
+        let observers = this.observerMap.get(notificationName);
+
+        // find the observer for the notifyContext
+        for (let i = 0; i &lt; observers.length; i++) {
+            if (observers[i].compareNotifyContext(notifyContext) == true) {
+                // there can only be one Observer for a given notifyContext
+                // in any given Observer list, so remove it and break
+                observers.splice(i, 1);
+                break;
+            }
+        }
+
+        // Also, when a Notification's Observer list length falls to
+        // zero, delete the notification key from the observer map
+        if (observers.length == 0) {
+            this.observerMap.delete(notificationName);
+        }
+    }
+
+    /**
+     * Register an &lt;code>IMediator&lt;/code> instance with the &lt;code>View&lt;/code>.
+     *
+     * &lt;P>Registers the &lt;code>IMediator&lt;/code> so that it can be retrieved by name,
+     * and further interrogates the &lt;code>IMediator&lt;/code> for its
+     * &lt;code>INotification&lt;/code> interests.&lt;/P>
+     *
+     * &lt;P>If the &lt;code>IMediator&lt;/code> returns any &lt;code>INotification&lt;/code>
+     * names to be notified about, an &lt;code>Observer&lt;/code> is created encapsulating
+     * the &lt;code>IMediator&lt;/code> instance's &lt;code>handleNotification&lt;/code> method
+     * and registering it as an &lt;code>Observer&lt;/code> for all &lt;code>INotifications&lt;/code> the
+     * &lt;code>IMediator&lt;/code> is interested in.&lt;/p>
+     *
+     * @param {puremvc.IMediator} mediator a reference to the &lt;code>IMediator&lt;/code> instance
+     */
+    registerMediator(mediator) {
+        // do not allow re-registration (you must to removeMediator fist)
+        if (this.mediatorMap.has(mediator.getMediatorName()) !== false) return;
+
+        mediator.initializeNotifier(this.multitonKey);
+
+        // Register the Mediator for retrieval by name
+        this.mediatorMap.set(mediator.getMediatorName(), mediator);
+
+        // Get Notification interests, if any.
+        let interests = mediator.listNotificationInterests();
+
+        // Register Mediator as an observer for each notification of interests
+        if (interests.length > 0) {
+            // Create Observer referencing this mediator's handlNotification method
+            let observer = new Observer(mediator.handleNotification.bind(mediator), mediator); // check bind
+
+            // Register Mediator as Observer for its list of Notification interests
+            for (let i = 0; i &lt; interests.length; i++) {
+                this.registerObserver(interests[i], observer);
+            }
+        }
+
+        // alert the mediator that it has been registered
+        mediator.onRegister();
+    }
+
+    /**
+     * Retrieve an &lt;code>IMediator&lt;/code> from the &lt;code>View&lt;/code>.
+     *
+     * @param {string} mediatorName the name of the &lt;code>IMediator&lt;/code> instance to retrieve.
+     * @returns {puremvc.IMediator} the &lt;code>IMediator&lt;/code> instance previously registered with the given &lt;code>mediatorName&lt;/code>.
+     */
+    retrieveMediator(mediatorName) {
+        return this.mediatorMap.get(mediatorName);
+    }
+
+    /**
+     * Remove an &lt;code>IMediator&lt;/code> from the &lt;code>View&lt;/code>.
+     *
+     * @param {string} mediatorName name of the &lt;code>IMediator&lt;/code> instance to be removed.
+     * @returns {puremvc.IMediator} the &lt;code>IMediator&lt;/code> that was removed from the &lt;code>View&lt;/code>
+     */
+    removeMediator(mediatorName) {
+        // Retrieve the named mediator
+        let mediator = this.mediatorMap.get(mediatorName);
+
+        if (mediator) {
+            // for every notification this mediator is interested in...
+            let interests = mediator.listNotificationInterests();
+            for (let i = 0; i &lt; interests.length; i++) {
+                // remove the observer linking the mediator
+                // to the notification interest
+                this.removeObserver(interests[i], mediator);
+            }
+
+            // remove the mediator from the map
+            this.mediatorMap.delete(mediatorName);
+
+            // alert the mediator that it has been removed
+            mediator.onRemove();
+        }
+
+        return mediator;
+    }
+
+    /**
+     * Check if a Mediator is registered or not
+     *
+     * @param {string} mediatorName
+     * @returns {boolean} whether a Mediator is registered with the given &lt;code>mediatorName&lt;/code>.
+     */
+    hasMediator(mediatorName) {
+        return this.mediatorMap.has(mediatorName);
+    }
+
+    /**
+     * Remove an IView instance
+     *
+     * @static
+     * @param key multitonKey of IView instance to remove
+     */
+    static removeView(key) {
+        this.instanceMap.delete(key);
+    }
+
+    /**
+     * Multiton instance
+     *
+     * @static
+     * @type {Map&lt;string, puremvc.IView>}
+     */
+    static instanceMap = new Map();
+
+    /**
+     * Message Constants
+     *
+     * @static
+     * @type {string}
+     */
+    static get MULTITON_MSG() { return "View instance for this Multiton key already constructed!" };
+
+}
+
+
+/**
+ *
+ * A base &lt;code>INotification&lt;/code> implementation.
+ *
+ * &lt;P>PureMVC does not rely upon underlying event models such
+ * as the one provided with Flash, and ActionScript 3 does
+ * not have an inherent event model.&lt;/P>
+ *
+ * &lt;P>The Observer Pattern as implemented within PureMVC exists
+ * to support event-driven communication between the
+ * application and the actors of the MVC triad.&lt;/P>
+ *
+ * &lt;P>Notifications are not meant to be a replacement for Events
+ * in Flex/Flash/Apollo. Generally, &lt;code>IMediator&lt;/code> implementors
+ * place event listeners on their view components, which they
+ * then handle in the usual way. This may lead to the broadcast of &lt;code>Notification&lt;/code>s to
+ * trigger &lt;code>ICommand&lt;/code>s or to communicate with other &lt;code>IMediators&lt;/code>. &lt;code>IProxy&lt;/code> and &lt;code>ICommand&lt;/code>
+ * instances communicate with each other and &lt;code>IMediator&lt;/code>s
+ * by broadcasting &lt;code>INotification&lt;/code>s.&lt;/P>
+ *
+ * &lt;P>A key difference between Flash &lt;code>Event&lt;/code>s and PureMVC
+ * &lt;code>Notification&lt;/code>s is that &lt;code>Event&lt;/code>s follow the
+ * 'Chain of Responsibility' pattern, 'bubbling' up the display hierarchy
+ * until some parent component handles the &lt;code>Event&lt;/code>, while
+ * PureMVC &lt;code>Notification&lt;/code>s follow a 'Publish/Subscribe'
+ * pattern. PureMVC classes need not be related to each other in a
+ * parent/child relationship in order to communicate with one another
+ * using &lt;code>Notification&lt;/code>s.&lt;/P>
+ *
+ * @typedef {puremvc.INotification} INotification
+ * @typedef {puremvc.Notification} Notification
+ *
+ * @class puremvc.Notification
+ * @implements puremvc.INotification
+ */
+class Notification extends INotification {
+
+    /**
+     * Constructor.
+     *
+     * @constructor
+     * @param {string} name
+     * @param {Object} [body] body
+     * @param {string} [type] type
+     */
+    constructor(name, body = null, type = "") {
+        super();
+        /** @private */
+        this.name = name;
+        /** @private */
+        this.body = body;
+        /** @private */
+        this.type = type;
+    }
+
+    /**
+     * Get the name of the &lt;code>Notification&lt;/code> instance.
+     *
+     * @returns {string}
+     */
+    getName() {
+        return this.name;
+    }
+
+    /**
+     * Set the body of the &lt;code>Notification&lt;/code> instance.
+     *
+     * @param {Object} body
+     */
+    setBody(body) {
+        this.body = body;
+    }
+
+    /**
+     * Get the body of the &lt;code>Notification&lt;/code> instance.
+     *
+     * @returns {Object}
+     */
+    getBody() {
+        return this.body;
+    }
+
+    /**
+     * Set the type of the &lt;code>Notification&lt;/code> instance.
+     *
+     * @param {string} type
+     */
+    setType(type) {
+        this.type = type;
+    }
+
+    /**
+     * Get the type of the &lt;code>Notification&lt;/code> instance.
+     *
+     * @returns {string}
+     */
+    getType() {
+        return this.type;
+    }
+
+    /**
+     * Get the string representation of the &lt;code>Notification&lt;/code> instance.
+     *
+     * @returns {string}
+     */
+    toString() {
+        let str= "Notification Name: " + this.name;
+        str+= "\nBody:" + ((this.body == null ) ? "null" : this.body.toString());
+        str+= "\nType:" + ((this.type == null ) ? "null" : this.type);
+        return str;
+    }
+
+}
+
+
+/**
+ * A Base &lt;code>INotifier&lt;/code> implementation.
+ *
+ * &lt;P>&lt;code>MacroCommand, Command, Mediator&lt;/code> and &lt;code>Proxy&lt;/code>
+ * all have a need to send &lt;code>Notifications&lt;/code>.&lt;P>
+ *
+ * &lt;P>The &lt;code>INotifier&lt;/code> interface provides a common method called
+ * &lt;code>sendNotification&lt;/code> that relieves implementation code of
+ * the necessity to actually construct &lt;code>Notifications&lt;/code>.&lt;/P>
+ *
+ * &lt;P>The &lt;code>Notifier&lt;/code> class, which all of the above mentioned classes
+ * extend, provides an initialized reference to the &lt;code>Facade&lt;/code>
+ * Multiton, which is required for the convenience method
+ * for sending &lt;code>Notifications&lt;/code>, but also eases implementation as these
+ * classes have frequent &lt;code>Facade&lt;/code> interactions and usually require
+ * access to the facade anyway.&lt;/P>
+ *
+ * &lt;P>NOTE: In the MultiCore version of the framework, there is one caveat to
+ * notifiers, they cannot send notifications or reach the facade until they
+ * have a valid multitonKey.&lt;/P>
+ *
+ * The multitonKey is set:
+ *   * on a Command when it is executed by the Controller
+ *   * on a Mediator is registered with the View
+ *   * on a Proxy is registered with the Model.
+ *
+ * @see puremvc.Proxy Proxy
+ * @see puremvc.Facade Facade
+ * @see puremvc.Mediator Mediator
+ * @see puremvc.MacroCommand MacroCommand
+ * @see puremvc.SimpleCommand SimpleCommand
+ *
+ * @typedef {puremvc.Notifier} Notifier
+ *
+ * @class puremvc.Notifier
+ * @implements puremvc.INotifier
+ */
+class Notifier {
+
+    /**
+     * Create and send an &lt;code>INotification&lt;/code>.
+     *
+     * &lt;P>Keeps us from having to construct new INotification
+     * instances in our implementation code.&lt;/P>
+     *
+     * @param {string} notificationName
+     * @param {Object} [body] body
+     * @param {string} [type] type
+     */
+    sendNotification (notificationName, body = null, type = "") {
+        if (this.facade != null) {
+            this.facade.sendNotification(notificationName, body, type);
+        }
+    }
+
+    /**
+     * Initialize this INotifier instance.
+     *
+     * &lt;P>This is how a Notifier gets its multitonKey.
+     * Calls to sendNotification or to access the
+     * facade will fail until after this method
+     * has been called.&lt;/P>
+     *
+     * &lt;P>Mediators, Commands or Proxies may override
+     * this method in order to send notifications
+     * or access the Multiton Facade instance as
+     * soon as possible. They CANNOT access the facade
+     * in their constructors, since this method will not
+     * yet have been called.&lt;/P>
+     *
+     * @param {string} key the multitonKey for this INotifier to use
+     */
+    initializeNotifier(key) {
+        /** @private */
+        this.multitonKey = key;
+    }
+
+    /**
+     * Return the Multiton Facade instance
+     *
+     * @typedef {puremvc.Facade} Facade
+     *
+     * @throws {Error}
+     */
+    get facade() {
+        if (this.multitonKey == null) throw new Error(Notifier.MULTITON_MSG);
+        return Facade.getInstance(this.multitonKey, key => new Facade(key));
+    }
+
+    /**
+     * Message Constants
+     *
+     * @static
+     * @returns {string}
+     */
+    static get MULTITON_MSG() { return "multitonKey for this Notifier not yet initialized!" }
+}
+
+
+/**
+ * A base &lt;code>IObserver&lt;/code> implementation.
+ *
+ * &lt;P>An &lt;code>Observer&lt;/code> is an object that encapsulates information
+ * about an interested object with a method that should
+ * be called when a particular &lt;code>INotification&lt;/code> is broadcast.&lt;/P>
+ *
+ * &lt;P>In PureMVC, the &lt;code>Observer&lt;/code> class assumes these responsibilities:&lt;/P>
+ *
+ * &lt;UL>
+ * &lt;LI>Encapsulate the notification (callback) method of the interested object.&lt;/LI>
+ * &lt;LI>Encapsulate the notification context (this) of the interested object.&lt;/LI>
+ * &lt;LI>Provide methods for setting the notification method and context.&lt;/LI>
+ * &lt;LI>Provide a method for notifying the interested object.&lt;/LI>
+ * &lt;/UL>
+ *
+ * @typedef {puremvc.Observer} Observer
+ *
+ * @class puremvc.Observer
+ * @implements puremvc.IObserver
+ */
+class Observer {
+
+    /**
+     * Constructor.
+     *
+     * &lt;P>The notification method on the interested object should take
+     * one parameter of type &lt;code>INotification&lt;/code>&lt;/P>
+     *
+     * @param {consumer} notifyMethod
+     * @param {function(puremvc.INotification):void} notifyMethod
+     * @param {Object} notifyContext
+     */
+    constructor(notifyMethod, notifyContext) {
+        /** @private */
+        this.notifyMethod = notifyMethod;
+        /** @private */
+        this.notifyContext = notifyContext;
+    }
+
+    /**
+     * Notify the interested object.
+     *
+     * @param {puremvc.INotification} notification
+     */
+    notifyObserver(notification) {
+        this.notifyMethod.call(this.notifyContext, notification);
+    }
+
+    /**
+     * Compare an object to the notification context.
+     *
+     * @param {Object} notifyContext
+     * @returns {boolean}
+     */
+    compareNotifyContext(notifyContext) {
+        return this.notifyContext === notifyContext;
+    }
+
+    /**
+     * Set the notification method.
+     *
+     * &lt;P>The notification method should take one parameter of type &lt;code>INotification&lt;/code>.&lt;/P>
+     *
+     * @param {consumer} notifyMethod
+     * @param {function(puremvc.INotification):void} notifyMethod
+     */
+    setNotifyMethod(notifyMethod) {
+        this.notifyMethod = notifyMethod;
+    }
+
+    /**
+     * Set the notification context.
+     *
+     * @param {Object} notifyContext
+     */
+    setNotifyContext(notifyContext) {
+        this.notifyContext = notifyContext;
+    }
+
+}
+
+
+/**
+ * A base Multiton &lt;code>IFacade&lt;/code> implementation.
+ *
+ * @see puremvc.Model Model
+ * @see puremvc.View View
+ * @see puremvc.Controller Controller
+ *
+ * @typedef {puremvc.Facade} Facade
+ *
+ * @class puremvc.Facade
+ * @implements puremvc.IFacade
+ */
+class Facade {
+
+    /**
+     * Constructor.
+     *
+     * &lt;P>This &lt;code>IFacade&lt;/code> implementation is a Multiton,
+     * so you should not call the constructor
+     * directly, but instead call the static Factory method,
+     * passing the unique key for this instance
+     * &lt;code>Facade.getInstance( multitonKey )&lt;/code>&lt;/P>
+     *
+     * @constructor
+     * @param {string} key
+     * @throws {Error} Error if instance for this Multiton key has already been constructed
+     */
+    constructor(key) {
+        if (Facade.instanceMap[key] != null) throw new Error(Facade.MULTITON_MSG);
+        this.initializeNotifier(key);
+        Facade.instanceMap.set(this.multitonKey, this);
+        this.initializeFacade();
+    }
+
+    /**
+     * Initialize the Multiton &lt;code>Facade&lt;/code> instance.
+     *
+     * &lt;P>Called automatically by the constructor. Override in your
+     * subclass to do any subclass specific initializations. Be
+     * sure to call &lt;code>super.initializeFacade()&lt;/code>, though.&lt;/P>
+     */
+    initializeFacade() {
+        this.initializeModel();
+        this.initializeController();
+        this.initializeView();
+    }
+
+    /**
+     * Facade Multiton Factory method
+     *
+     * @static
+     * @param {string} key
+     * @param {factory} factory
+     * @param {function(string):puremvc.IFacade} factory
+     * @returns {puremvc.IFacade} the Multiton instance of the Facade
+     */
+    static getInstance(key, factory) {
+        if (this.instanceMap.get(key) == null) this.instanceMap.set(key, factory(key));
+        return this.instanceMap.get(key);
+    }
+
+    /**
+     * Initialize the &lt;code>Model&lt;/code>.
+     *
+     * &lt;P>Called by the &lt;code>initializeFacade&lt;/code> method.
+     * Override this method in your subclass of &lt;code>Facade&lt;/code>
+     * if one or both of the following are true:&lt;/P>
+     *
+     * &lt;UL>
+     * &lt;LI> You wish to initialize a different &lt;code>IModel&lt;/code>.&lt;/LI>
+     * &lt;LI> You have &lt;code>Proxy&lt;/code>s to register with the Model that do not
+     * retrieve a reference to the Facade at construction time.&lt;/code>&lt;/LI>
+     * &lt;/UL>
+     *
+     * If you don't want to initialize a different &lt;code>IModel&lt;/code>,
+     * call &lt;code>super.initializeModel()&lt;/code> at the beginning of your
+     * method, then register &lt;code>Proxy&lt;/code>s.
+     *
+     * &lt;P>Note: This method is &lt;i>rarely&lt;/i> overridden; in practice you are more
+     * likely to use a &lt;code>Command&lt;/code> to create and register &lt;code>Proxy&lt;/code>s
+     * with the &lt;code>Model&lt;/code>, since &lt;code>Proxy&lt;/code>s with mutable data will likely
+     * need to send &lt;code>INotification&lt;/code>s and thus will likely want to fetch a reference to
+     * the &lt;code>Facade&lt;/code> during their construction.&lt;/P>
+     */
+    initializeModel() {
+        if (this.model != null) return;
+        this.model = Model.getInstance(this.multitonKey, key => new Model(key));
+    }
+
+    /**
+     * Initialize the &lt;code>Controller&lt;/code>.
+     *
+     * &lt;P>Called by the &lt;code>initializeFacade&lt;/code> method.
+     * Override this method in your subclass of &lt;code>Facade&lt;/code>
+     * if one or both of the following are true:&lt;/P>
+     *
+     * &lt;UL>
+     * &lt;LI> You wish to initialize a different &lt;code>IController&lt;/code>.&lt;/LI>
+     * &lt;LI> You have &lt;code>Commands&lt;/code> to register with the &lt;code>Controller&lt;/code> at startup.&lt;/code>. &lt;/LI>
+     * &lt;/UL>
+     *
+     * &lt;P>If you don't want to initialize a different &lt;code>IController&lt;/code>,
+     * call &lt;code>super.initializeController()&lt;/code> at the beginning of your
+     * method, then register &lt;code>Command&lt;/code>s.&lt;/P>
+     */
+    initializeController() {
+        if (this.controller != null) return;
+        this.controller = Controller.getInstance(this.multitonKey, key => new Controller(key));
+    }
+
+    /**
+     * Initialize the &lt;code>View&lt;/code>.
+     *
+     * &lt;P>Called by the &lt;code>initializeFacade&lt;/code> method.
+     * Override this method in your subclass of &lt;code>Facade&lt;/code>
+     * if one or both of the following are true:&lt;/P>
+     *
+     * &lt;UL>
+     * &lt;LI> You wish to initialize a different &lt;code>IView&lt;/code>.&lt;/LI>
+     * &lt;LI> You have &lt;code>Observers&lt;/code> to register with the &lt;code>View&lt;/code>&lt;/LI>
+     * &lt;/UL>
+     *
+     * &lt;P>If you don't want to initialize a different &lt;code>IView&lt;/code>,
+     * call &lt;code>super.initializeView()&lt;/code> at the beginning of your
+     * method, then register &lt;code>IMediator&lt;/code> instances.&lt;/P>
+     *
+     * &lt;P>Note: This method is &lt;i>rarely&lt;/i> overridden; in practice you are more
+     * likely to use a &lt;code>Command&lt;/code> to create and register &lt;code>Mediator&lt;/code>s
+     * with the &lt;code>View&lt;/code>, since &lt;code>IMediator&lt;/code> instances will need to send
+     * &lt;code>INotification&lt;/code>s and thus will likely want to fetch a reference
+     * to the &lt;code>Facade&lt;/code> during their construction.&lt;/P>
+     */
+    initializeView() {
+        if (this.view != null) return;
+        this.view = View.getInstance(this.multitonKey, key => new View(key));
+    }
+
+    /**
+     * Register an &lt;code>ICommand&lt;/code> with the &lt;code>Controller&lt;/code> by Notification name.
+     *
+     * @param {string} notificationName the name of the &lt;code>INotification&lt;/code> to associate the &lt;code>ICommand&lt;/code> with
+     * @param {factory} factory
+     * @param {function():puremvc.ICommand} factory a reference to the factory of the &lt;code>ICommand&lt;/code>
+     */
+    registerCommand(notificationName, factory) {
+        this.controller.registerCommand(notificationName, factory);
+    }
+
+    /**
+     * Check if a Command is registered for a given Notification
+     *
+     * @param {string} notificationName
+     * @returns {boolean} whether a Command is currently registered for the given &lt;code>notificationName&lt;/code>.
+     */
+    hasCommand(notificationName) {
+        return this.controller.hasCommand(notificationName);
+    }
+
+    /**
+     * Remove a previously registered &lt;code>ICommand&lt;/code> to &lt;code>INotification&lt;/code> mapping from the Controller.
+     *
+     * @param {string} notificationName the name of the &lt;code>INotification&lt;/code> to remove the &lt;code>ICommand&lt;/code> mapping for
+     */
+    removeCommand(notificationName) {
+        this.controller.removeCommand(notificationName);
+    }
+
+    /**
+     * Register an &lt;code>IProxy&lt;/code> with the &lt;code>Model&lt;/code> by name.
+     *
+     * @param {string} proxyName the name of the &lt;code>IProxy&lt;/code>.
+     * @param {puremvc.IProxy} proxy the &lt;code>IProxy&lt;/code> instance to be registered with the &lt;code>Model&lt;/code>.
+     */
+    registerProxy(proxy) {
+        this.model.registerProxy(proxy);
+    }
+
+    /**
+     * Remove an &lt;code>IProxy&lt;/code> from the &lt;code>Model&lt;/code> by name.
+     *
+     * @param {string} proxyName the &lt;code>IProxy&lt;/code> to remove from the &lt;code>Model&lt;/code>.
+     * @returns {puremvc.IProxy} the &lt;code>IProxy&lt;/code> that was removed from the &lt;code>Model&lt;/code>
+     */
+    removeProxy(proxyName) {
+        return this.model.removeProxy(proxyName);
+    }
+
+    /**
+     * Check if a Proxy is registered
+     *
+     * @param {string} proxyName
+     * @returns {boolean} whether a Proxy is currently registered with the given &lt;code>proxyName&lt;/code>.
+     */
+    hasProxy(proxyName) {
+        return this.model.hasProxy(proxyName);
+    }
+
+    /**
+     * Retrieve an &lt;code>IProxy&lt;/code> from the &lt;code>Model&lt;/code> by name.
+     *
+     * @param {string} proxyName the name of the proxy to be retrieved.
+     * @returns {puremvc.IProxy} the &lt;code>IProxy&lt;/code> instance previously registered with the given &lt;code>proxyName&lt;/code>.
+     */
+    retrieveProxy(proxyName) {
+        return this.model.retrieveProxy(proxyName);
+    }
+
+    /**
+     * Register a &lt;code>IMediator&lt;/code> with the &lt;code>View&lt;/code>.
+     *
+     * @param {puremvc.IMediator} mediator a reference to the &lt;code>IMediator&lt;/code>
+     */
+    registerMediator(mediator) {
+        this.view.registerMediator(mediator);
+    }
+
+    /**
+     * Remove an &lt;code>IMediator&lt;/code> from the &lt;code>View&lt;/code>.
+     *
+     * @param {string} mediatorName name of the &lt;code>IMediator&lt;/code> to be removed.
+     * @returns {puremvc.IMediator} the &lt;code>IMediator&lt;/code> that was removed from the &lt;code>View&lt;/code>
+     */
+    removeMediator(mediatorName) {
+        return this.view.removeMediator(mediatorName);
+    }
+
+    /**
+     * Check if a Mediator is registered or not
+     *
+     * @param {string} mediatorName
+     * @returns {puremvc.IMediator} whether a Mediator is registered with the given &lt;code>mediatorName&lt;/code>.
+     */
+    hasMediator(mediatorName) {
+        return this.view.hasMediator(mediatorName);
+    }
+
+    /**
+     * Retrieve an &lt;code>IMediator&lt;/code> from the &lt;code>View&lt;/code>.
+     *
+     * @param {string} mediatorName
+     * @returns {puremvc.IMediator} the &lt;code>IMediator&lt;/code> previously registered with the given &lt;code>mediatorName&lt;/code>.
+     */
+    retrieveMediator(mediatorName) {
+        return this.view.retrieveMediator(mediatorName);
+    }
+
+    /**
+     * Create and send an &lt;code>INotification&lt;/code>.
+     *
+     * &lt;P>Keeps us from having to construct new notification
+     * instances in our implementation code.&lt;/P>
+     *
+     * @param {string} notificationName the name of the notiification to send
+     * @param {Object} [body] body the body of the notification (optional)
+     * @param {string} [type] type the type of the notification (optional)
+     */
+    sendNotification(notificationName, body = null, type = "") {
+        this.notifyObservers(new Notification(notificationName, body, type));
+    }
+
+    /**
+     * Notify &lt;code>Observer&lt;/code>s.
+     *
+     * &lt;P>This method is left public mostly for backward
+     * compatibility, and to allow you to send custom
+     * notification classes using the facade.&lt;/P>
+     *
+     * &lt;P>Usually you should just call sendNotification
+     * and pass the parameters, never having to
+     * construct the notification yourself.&lt;/P>
+     *
+     * @param {puremvc.INotification} notification the &lt;code>INotification&lt;/code> to have the &lt;code>View&lt;/code> notify &lt;code>Observers&lt;/code> of.
+     */
+    notifyObservers(notification) {
+        this.view.notifyObservers(notification);
+    }
+
+    /**
+     * Set the Multiton key for this facade instance.
+     *
+     * &lt;P>Not called directly, but instead from the
+     * constructor when getInstance is invoked.
+     * It is necessary to be public in order to
+     * implement INotifier.&lt;/P>
+     */
+    initializeNotifier(key) {
+        this.multitonKey = key;
+    }
+
+    /**
+     * Check if a Core is registered or not
+     *
+     * @static
+     * @param {string} key the multiton key for the Core in question
+     * @returns {boolean} whether a Core is registered with the given &lt;code>key&lt;/code>.
+     */
+    static hasCore(key) {
+        return this.instanceMap.has(key);
+    }
+
+    /**
+     * Remove a Core.
+     *
+     * &lt;P>Remove the Model, View, Controller and Facade
+     * instances for the given key.&lt;/P>
+     *
+     * @typedef {puremvc.IModel} Model
+     * @typedef {puremvc.IView} View
+     * @typedef {puremvc.IController} Controller
+     *
+     * @static
+     * @param {string} key multitonKey of the Core to remove
+     */
+    static removeCore(key) {
+        if (Facade.instanceMap.get(key) == null) return;
+        Model.removeModel(key);
+        View.removeView(key);
+        Controller.removeController(key);
+        this.instanceMap.delete(key);
+    }
+
+    /**
+     * The Multiton Facade instanceMap.
+     *
+     * @static
+     * @type {Map&lt;string, puremvc.IFacade>}
+     */
+    static instanceMap = new Map();
+
+    /**
+     * Message Constants
+     *
+     * @static
+     * @returns {string}
+     */
+    static get MULTITON_MSG() {return "Facade instance for this Multiton key already constructed!"};
+}
+
+
+/**
+ * A base &lt;code>ICommand&lt;/code> implementation.
+ *
+ * &lt;P>Your subclass should override the &lt;code>execute&lt;/code>
+ * method where your business logic will handle the &lt;code>INotification&lt;/code>.&lt;/P>
+ *
+ * @see puremvc.Controller Controller
+ * @see puremvc.Notification Notification
+ * @see puremvc.MacroCommand MacroCommand
+ *
+ * @typedef {puremvc.SimpleCommand} SimpleCommand
+ *
+ * @class puremvc.SimpleCommand
+ * @extends puremvc.Notifier
+ * @implements puremvc.ICommand
+ */
+class SimpleCommand extends Notifier {
+
+    /**
+     * Fulfill the use-case initiated by the given &lt;code>INotification&lt;/code>.
+     *
+     * &lt;P>In the Command Pattern, an application use-case typically
+     * begins with some user action, which results in an &lt;code>INotification&lt;/code> being broadcast, which
+     * is handled by business logic in the &lt;code>execute&lt;/code> method of an
+     * &lt;code>ICommand&lt;/code>.&lt;/P>
+     *
+     * @param {puremvc.INotification} notification
+     */
+    execute(notification) {
+
+    }
+}
+
+
+/**
+ * A base &lt;code>ICommand&lt;/code> implementation that executes other &lt;code>ICommand&lt;/code>s.
+ *
+ * &lt;P>A &lt;code>MacroCommand&lt;/code> maintains an list of
+ * &lt;code>ICommand&lt;/code> Class references called &lt;i>SubCommands&lt;/i>.&lt;/P>
+ *
+ * &lt;P>When &lt;code>execute&lt;/code> is called, the &lt;code>MacroCommand&lt;/code>
+ * instantiates and calls &lt;code>execute&lt;/code> on each of its &lt;i>SubCommands&lt;/i> turn.
+ * Each &lt;i>SubCommand&lt;/i> will be passed a reference to the original
+ * &lt;code>INotification&lt;/code> that was passed to the &lt;code>MacroCommand&lt;/code>'s
+ * &lt;code>execute&lt;/code> method.&lt;/P>
+ *
+ * &lt;P>Unlike &lt;code>SimpleCommand&lt;/code>, your subclass
+ * should not override &lt;code>execute&lt;/code>, but instead, should
+ * override the &lt;code>initializeMacroCommand&lt;/code> method,
+ * calling &lt;code>addSubCommand&lt;/code> once for each &lt;i>SubCommand&lt;/i>
+ * to be executed.&lt;/P>
+ *
+ * @see puremvc.Controller Controller
+ * @see puremvc.Notification Notification
+ * @see puremvc.SimpleCommand SimpleCommand
+ *
+ * @typedef {puremvc.MacroCommand} MacroCommand
+ *
+ * @class puremvc.MacroCommand
+ * @extends puremvc.Notifier
+ * @implements puremvc.ICommand
+ */
+class MacroCommand extends Notifier {
+
+    /**
+     * Constructor.
+     *
+     * &lt;P>You should not need to define a constructor,
+     * instead, override the &lt;code>initializeMacroCommand&lt;/code>
+     * method.&lt;/P>
+     *
+     * &lt;P>If your subclass does define a constructor, be
+     * sure to call &lt;code>super()&lt;/code>.&lt;/P>
+     *
+     * @constructor
+     */
+    constructor() {
+        super();
+        /** @protected {[function():puremvc.ICommand]} */
+        this.subCommands = [];
+        this.initializeMacroCommand();
+    }
+
+    /**
+     * Initialize the &lt;code>MacroCommand&lt;/code>.
+     *
+     * &lt;P>In your subclass, override this method to
+     * initialize the &lt;code>MacroCommand&lt;/code>'s &lt;i>SubCommand&lt;/i>
+     * list with &lt;code>ICommand&lt;/code> class references like
+     * this:&lt;/P>
+     *
+     * &lt;pre>&lt;code>
+     *		// Initialize MyMacroCommand
+     *		initializeMacroCommand() {
+     *			this.addSubCommand(() => new app.FirstCommand());
+     *			this.addSubCommand(() => new app.SecondCommand());
+     *			this.addSubCommand(() => new app.ThirdCommand());
+     *		}
+     * &lt;/code>&lt;/pre>
+     *
+     * &lt;P>Note that &lt;i>SubCommand&lt;/i>s may be any &lt;code>ICommand&lt;/code> implementor,
+     * &lt;code>MacroCommand&lt;/code>s or &lt;code>SimpleCommands&lt;/code> are both acceptable.
+     */
+    initializeMacroCommand() {
+
+    }
+
+    /**
+     * Add a &lt;i>SubCommand&lt;/i>.
+     *
+     * &lt;P>The &lt;i>SubCommands&lt;/i> will be called in First In/First Out (FIFO)
+     * order.&lt;/P>
+     *
+     * @param {factory} factory
+     * @param {function():puremvc.ICommand} factory
+     */
+    addSubCommand(factory) {
+        this.subCommands.push(factory);
+    }
+
+    /**
+     * Execute this &lt;code>MacroCommand&lt;/code>'s &lt;i>SubCommands&lt;/i>.
+     *
+     * &lt;P>The &lt;i>SubCommands&lt;/i> will be called in First In/First Out (FIFO)
+     * order.&lt;/P>
+     *
+     * @param {puremvc.INotification} notification
+     */
+    execute(notification) {
+        while(this.subCommands.length > 0) {
+            let factory = this.subCommands.shift();
+            let commandInstance = factory();
+            commandInstance.initializeNotifier(this.multitonKey);
+            commandInstance.execute(notification);
+        }
+    }
+
+}
+
+
+/**
+ * A base &lt;code>IMediator&lt;/code> implementation.
+ *
+ * @see puremvc.View View
+ *
+ * @typedef {puremvc.Mediator} Mediator
+ * @typedef {puremvc.Notifier} Notifier
+ *
+ * @class puremvc.Mediator
+ * @extends puremvc.Notifier
+ * @implements puremvc.IMediator
+ */
+class Mediator extends Notifier {
+
+    /**
+     * Constructor.
+     *
+     * @constructor
+     * @param {string} mediatorName
+     * @param {Object} [viewComponent] viewComponent
+     */
+    constructor(mediatorName, viewComponent = null) {
+        super();
+        /** @private */
+        this.mediatorName = mediatorName || Mediator.NAME;
+        /** @private */
+        this.viewComponent = viewComponent;
+    }
+
+    /**
+     * Called by the View when the Mediator is registered
+     */
+    onRegister() {
+
+    }
+
+    /**
+     * Called by the View when the Mediator is removed
+     */
+    onRemove() {
+
+    }
+
+    /**
+     * List the &lt;code>INotification&lt;/code> names this
+     * &lt;code>Mediator&lt;/code> is interested in being notified of.
+     *
+     * @returns {[string]}
+     */
+    listNotificationInterests() {
+        return [];
+    }
+
+    /**
+     * Handle &lt;code>INotification&lt;/code>s.
+     *
+     * &lt;P>
+     * Typically this will be handled in a switch statement,
+     * with one 'case' entry per &lt;code>INotification&lt;/code>
+     * the &lt;code>Mediator&lt;/code> is interested in.
+     *
+     * @param {puremvc.INotification} notification
+     */
+    handleNotification(notification) {
+
+    }
+
+    /**
+     * the mediator name
+     *
+     * @returns {string}
+     */
+    getMediatorName() {
+        return this.mediatorName;
+    }
+
+    /**
+     * Get the &lt;code>Mediator&lt;/code>'s view component.
+     *
+     * &lt;P>
+     * Additionally, an implicit getter will usually
+     * be defined in the subclass that casts the view
+     * object to a type, like this:&lt;/P>
+     *
+     * @returns {Object}
+     */
+    getViewComponent() {
+        return this.viewComponent;
+    }
+
+    /**
+     * Set the &lt;code>IMediator&lt;/code>'s view component.
+     *
+     * @param {Object} viewComponent
+     */
+    setViewComponent(viewComponent) {
+        this.viewComponent = viewComponent;
+    }
+
+    /**
+     * The name of the &lt;code>Mediator&lt;/code>.
+     *
+     * &lt;P>Typically, a &lt;code>Mediator&lt;/code> will be written to serve
+     * one specific control or group controls and so,
+     * will not have a need to be dynamically named.&lt;/P>
+     *
+     * @static
+     * @returns {string}
+     */
+    static get NAME() { return "Mediator" }
+}
+
+
+/**
+ * A base &lt;code>IProxy&lt;/code> implementation.
+ *
+ * &lt;P>In PureMVC, &lt;code>Proxy&lt;/code> classes are used to manage parts of the
+ * application's data model. &lt;/P>
+ *
+ * &lt;P>A &lt;code>Proxy&lt;/code> might simply manage a reference to a local data object,
+ * in which case interacting with it might involve setting and
+ * getting of its data in synchronous fashion.&lt;/P>
+ *
+ * &lt;P>&lt;code>Proxy&lt;/code> classes are also used to encapsulate the application's
+ * interaction with remote services to save or retrieve data, in which case,
+ * we adopt an asynchronous idiom; setting data (or calling a method) on the
+ * &lt;code>Proxy&lt;/code> and listening for a &lt;code>Notification&lt;/code> to be sent
+ * when the &lt;code>Proxy&lt;/code> has retrieved the data from the service. &lt;/P>
+ *
+ * @see puremvc.Model Model
+ *
+ * @typedef {puremvc.Proxy} Proxy
+ * @typedef {puremvc.Notifier} Notifier
+ *
+ * @class puremvc.Proxy
+ * @extends puremvc.Notifier
+ * @implements puremvc.IProxy
+ */
+class Proxy extends Notifier {
+
+    /**
+     * Constructor
+     *
+     * @constructor
+     * @param {string} proxyName
+     * @param {Object} [data]
+     */
+    constructor(proxyName, data = null) {
+        super();
+        /** @private */
+        this.proxyName = proxyName || Proxy.NAME;
+        /** @private */
+        this.data = data;
+    }
+
+    /**
+     * Called by the Model when the Proxy is registered
+     */
+    onRegister() {}
+
+    /**
+     * Called by the Model when the Proxy is removed
+     */
+    onRemove() {}
+
+    /**
+     * Get the proxy name
+     *
+     * @returns {string}
+     */
+    getProxyName() {
+        return this.proxyName;
+    }
+
+    /**
+     * Set the data object
+     *
+     * @param {Object} data
+     */
+    setData(data) {
+        this.data = data;
+    }
+
+    /**
+     * Get the data object
+     *
+     * @returns {Object}
+     */
+    getData () {
+        return this.data;
+    }
+
+    /**
+     *
+     * @static
+     * @returns {string}
+     */
+    static get NAME() { return "Proxy" }
+}
+
+
+scope.puremvc = {
+    ICommand: ICommand,
+    IController: IController,
+    IFacade: IFacade,
+    IMediator: IMediator,
+    IModel: IModel,
+    INotification: INotification,
+    INotifier: INotifier,
+    IObserver: IObserver,
+    IProxy: IProxy,
+    IView: IView,
+    Controller: Controller,
+    Model: Model,
+    View: View,
+    SimpleCommand: SimpleCommand,
+    MacroCommand: MacroCommand,
+    Facade: Facade,
+    Mediator: Mediator,
+    Notification: Notification,
+    Notifier: Notifier,
+    Observer: Observer,
+    Proxy: Proxy
+};
+
+})(typeof exports === "undefined" ? this : exports);
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="global.html">Controller</a></li><li><a href="global.html#Facade">Facade</a></li><li><a href="MacroCommand.html">MacroCommand</a></li><li><a href="Mediator.html">Mediator</a></li><li><a href="Model.html">Model</a></li><li><a href="Notification.html">Notification</a></li><li><a href="Observer.html">Observer</a></li><li><a href="Proxy.html">Proxy</a></li><li><a href="puremvc.Controller.html">Controller</a></li><li><a href="puremvc.Facade.html">Facade</a></li><li><a href="puremvc.MacroCommand.html">MacroCommand</a></li><li><a href="puremvc.Mediator.html">Mediator</a></li><li><a href="puremvc.Model.html">Model</a></li><li><a href="puremvc.Notification.html">Notification</a></li><li><a href="puremvc.Notifier.html">Notifier</a></li><li><a href="puremvc.Observer.html">Observer</a></li><li><a href="puremvc.Proxy.html">Proxy</a></li><li><a href="puremvc.SimpleCommand.html">SimpleCommand</a></li><li><a href="puremvc.View.html">View</a></li><li><a href="View.html">View</a></li></ul><h3>Interfaces</h3><ul><li><a href="puremvc.ICommand.html">ICommand</a></li><li><a href="puremvc.IController.html">IController</a></li><li><a href="puremvc.IFacade.html">IFacade</a></li><li><a href="puremvc.IMediator.html">IMediator</a></li><li><a href="puremvc.IModel.html">IModel</a></li><li><a href="puremvc.INotification.html">INotification</a></li><li><a href="puremvc.INotifier.html">INotifier</a></li><li><a href="puremvc.IObserver.html">IObserver</a></li><li><a href="puremvc.IProxy.html">IProxy</a></li><li><a href="puremvc.IView.html">IView</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.5</a> on Sat Aug 01 2020 10:00:14 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

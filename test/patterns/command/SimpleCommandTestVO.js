@@ -1,4 +1,9 @@
 /**
+ * A utility class used by SimpleCommandTest.
+ *
+ * @see SimpleCommandTest
+ * @see SimpleCommandTestCommand
+ *
  * @class SimpleCommandTestVO
  */
 class SimpleCommandTestVO {

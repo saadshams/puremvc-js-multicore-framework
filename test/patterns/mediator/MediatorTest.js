@@ -1,3 +1,9 @@
+/**
+ * Test the PureMVC Mediator class.
+ *
+ * @see IMediator
+ * @see Mediator
+ */
 describe("MediatorTest", () => {
 
     /**
@@ -11,6 +17,9 @@ describe("MediatorTest", () => {
         assert.equal(mediator.getMediatorName(), puremvc.Mediator.NAME, "Expecting mediator.getMediatorName() == Mediator.NAME");
     });
 
+    /**
+     * Tests getting the name using Mediator class accessor method.
+     */
     it("should testViewAccessor", () => {
         // Create a view object
         let view = new Object();

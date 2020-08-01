@@ -1,11 +1,19 @@
 /**
+ * A utility class used by MacroCommandTest.
+ *
+ * @see MacroCommandTest
+ * @see MacroCommandTestCommand
+ * @see MacroCommandTestSub1Command
+ * @see MacroCommandTestSub2Command
+ *
  * @class MacroCommandTestVO
  */
 class MacroCommandTestVO {
 
     /**
+     * Constructor.
      *
-     * @param {number} input
+     * @param {number} input the number to be fed to the MacroCommandTestCommand
      */
     constructor(input) {
         this.input = input;

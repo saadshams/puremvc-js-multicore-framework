@@ -1,6 +1,9 @@
 /**
  * A utility class used by ControllerTest.
  *
+ * @see ControllerTest
+ * @see ControllerTestCommand
+ *
  * @class ControllerTestVO
  */
 class ControllerTestVO {

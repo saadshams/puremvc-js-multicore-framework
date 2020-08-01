@@ -15,6 +15,14 @@ class ViewTestMediator3 extends puremvc.Mediator {
     }
 
     /**
+     * @override
+     * @param notification
+     */
+    handleNotification(notification) {
+        this.getViewComponent().lastNotification = notification.getName();
+    }
+
+    /**
      * The Mediator name
      * @returns {string}
      */

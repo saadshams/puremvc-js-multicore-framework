@@ -1,7 +1,7 @@
 //
 //  PureMVC JS Multicore Unit Tests
 //
-//  Copyright(c) 2019 Saad Shams <saad.shams@puremvc.org>
+//  Copyright(c) 2020 Saad Shams <saad.shams@puremvc.org>
 //  Your reuse is governed by the Creative Commons Attribution 3.0 License
 //
 
@@ -12,8 +12,18 @@ if (typeof exports !== "undefined") {
     var assert = chai.assert;
 }
 
+
+/**
+ * Test the PureMVC Controller class.
+ *
+ * @see ControllerTestVO
+ * @see ControllerTestCommand
+ */
 describe("ControllerTest", () => {
 
+    /**
+     * Tests the Controller Multiton Factory Method
+     */
     it("should testGetInstance", () => {
         // Test Factory Method
         let controller = puremvc.Controller.getInstance("ControllerTestKey1", key => new puremvc.Controller(key));
@@ -22,19 +32,43 @@ describe("ControllerTest", () => {
         assert.isNotNull(controller);
     });
 
+    /**
+     * Tests Command registration and execution.
+     *
+     * <P>This test gets a Multiton Controller instance
+     * and registers the ControllerTestCommand class
+     * to handle 'ControllerTest' Notifications.<P>
+     *
+     * <P>It then constructs such a Notification and tells the
+     * Controller to execute the associated Command.
+     * Success is determined by evaluating a property
+     * on an object passed to the Command, which will
+     * be modified when the Command executes.</P>
+     */
     it("should testRegisterAndExecuteCommand", () => {
+        // Create the controller, register the ControllerTestCommand to handle 'ControllerTest' notes
         let controller = puremvc.Controller.getInstance("ControllerTestKey2", key => new puremvc.Controller(key));
-
         controller.registerCommand("ControllerTest", () => new ControllerTestCommand());
 
+        // Create a 'ControllerTest' note
         let vo = new ControllerTestVO(12);
         let note = new puremvc.Notification("ControllerTest", vo);
 
+        // Tell the controller to execute the Command associated with the note
+        // the ControllerTestCommand invoked will multiply the vo.input value
+        // by 2 and set the result on vo.result
         controller.executeCommand(note);
 
+        // test assertions
         assert.isTrue(vo.result == 24, "Expected vo.result == 24");
     });
 
+    /**
+     * Tests Command registration and removal.
+     *
+     * <P>Tests that once a Command is registered and verified
+     * working, it can be removed from the Controller.</P>
+     */
     it("should testRegisterAndRemoveCommand", () => {
         // Create the controller, register the ControllerTestCommand to handle 'ControllerTest' notes
         let controller = puremvc.Controller.getInstance("ControllerTestKey3", key => new puremvc.Controller(key));
@@ -67,6 +101,9 @@ describe("ControllerTest", () => {
         assert.isTrue(vo.result == 0, "Expecting vo.result == 0");
     });
 
+    /**
+     * Test hasCommand method.
+     */
     it("should testHasCommand", () => {
         // register the ControllerTestCommand to handle 'hasCommandTest' notes
         let controller = puremvc.Controller.getInstance("ControllerTestKey4", key => new puremvc.Controller(key));
@@ -82,6 +119,17 @@ describe("ControllerTest", () => {
         assert.isFalse(controller.hasCommand("hasCommandTest"), "Expecting controller.hasCommand('hasCommandTest') == true");
     });
 
+    /**
+     * Tests Removing and Reregistering a Command
+     *
+     * <P>Tests that when a Command is re-registered that it isn't fired twice.
+     * This involves, minimally, registration with the controller but
+     * notification via the View, rather than direct execution of
+     * the Controller's executeCommand method as is done above in
+     * testRegisterAndRemove. The bug under test was fixed in AS3 Standard
+     * Version 2.0.2. If you run the unit tests with 2.0.1 this
+     * test will fail.</P>
+     */
     it("should testReregisterAndExecuteCommand", () => {
         // Fetch the controller, register the ControllerTestCommand2 to handle 'ControllerTest2' notes
         let controller = puremvc.Controller.getInstance("ControllerTestKey5", key => new puremvc.Controller(key));
@@ -116,11 +164,23 @@ describe("ControllerTest", () => {
 
 });
 
+
 /**
+ /**
+ * A SimpleCommand subclass used by ControllerTest.
+ *
+ * @see ControllerTest
+ * @see ControllerTestVO
+ *
  * @class ControllerTestCommand
  */
 class ControllerTestCommand extends puremvc.SimpleCommand {
 
+    /**
+     * Fabricate a result by multiplying the input by 2
+     *
+     * @param notification the note carrying the ControllerTestVO
+     */
     execute(notification) {
         /** @type ControllerTestVO */
         let vo = notification.getBody();
@@ -130,8 +190,12 @@ class ControllerTestCommand extends puremvc.SimpleCommand {
     }
 }
 
+
 /**
  * A SimpleCommand subclass used by ControllerTest.
+ *
+ * @see ControllerTest
+ * @see ControllerTestVO
  *
  * @class ControllerTestCommand2
  */
@@ -152,8 +216,12 @@ class ControllerTestCommand2 extends puremvc.SimpleCommand {
 
 }
 
+
 /**
  * A utility class used by ControllerTest.
+ *
+ * @see ControllerTest
+ * @see ControllerTestCommand
  *
  * @class ControllerTestVO
  */
@@ -194,6 +262,10 @@ class ControllerTestVO {
     }
 }
 
+
+/**
+ * Test the PureMVC Model class.
+ */
 describe("ModelTest", () => {
 
     /**
@@ -207,6 +279,15 @@ describe("ModelTest", () => {
         assert.isNotNull(model, "Expecting instance not null");
     });
 
+    /**
+     * Tests the proxy registration and retrieval methods.
+     *
+     * <P>
+     * Tests <code>registerProxy</code> and <code>retrieveProxy</code> in the same test.
+     * These methods cannot currently be tested separately
+     * in any meaningful way other than to show that the
+     * methods do not throw exception when called. </P>
+     */
     it("should testRegisterAndRetrieveProxy", () => {
         // register a proxy and retrieve it.
         let model = puremvc.Model.getInstance("ModelTestKey2", key => new puremvc.Model(key));
@@ -287,6 +368,7 @@ describe("ModelTest", () => {
 
 });
 
+
 /**
  * @class ModelTestProxy
  */
@@ -313,12 +395,6 @@ class ModelTestProxy extends puremvc.Proxy {
 }
 
 let ViewTest = {
-
-    lastNotification: "",
-    onRegisterCalled: false,
-    onRemoveCalled: false,
-    counter: 0,
-
     NOTE1: "Notification1",
     NOTE2: "Notification2",
     NOTE3: "Notification3",
@@ -327,8 +403,13 @@ let ViewTest = {
     NOTE6: "Notification6"
 };
 
+/**
+ * Test the PureMVC View class.
+ */
 describe("ViewTest", () => {
-
+    /**
+     * Tests the View Multiton Factory Method
+     */
     it("should testGetInstance", () => {
         // Test Factory Method
         let view = puremvc.View.getInstance("ViewTestKey1", key => {return new puremvc.View(key)});
@@ -337,6 +418,24 @@ describe("ViewTest", () => {
         assert.isNotNull(view, "Expecting instance not null");
     });
 
+    /**
+     * Tests registration and notification of Observers.
+     *
+     * <P>An Observer is created to callback the viewTestMethod of
+     * this ViewTest instance. This Observer is registered with
+     * the View to be notified of 'ViewTestEvent' events. Such
+     * an event is created, and a value set on its payload. Then
+     * the View is told to notify interested observers of this
+     * Event.</P>
+     *
+     * <P>The View calls the Observer's notifyObserver method
+     * which calls the viewTestMethod on this instance
+     * of the ViewTest class. The viewTestMethod method will set
+     * an instance variable to the value passed in on the Event
+     * payload. We evaluate the instance variable to be sure
+     * it is the same as that passed out as the payload of the
+     * original 'ViewTestEvent'.</P>
+     */
     it("should testRegisterAndNotifyObserver", () => {
         // Get the Multiton View instance
         let view = puremvc.View.getInstance("ViewTestKey2", key => {return new puremvc.View(key)});
@@ -377,9 +476,275 @@ describe("ViewTest", () => {
         let mediator = view.retrieveMediator(ViewTestMediator.NAME);
 
         // test assertions
-        //assert.isTrue(mediator != undefined, "ViewTestMediator is not null");
+        assert.isTrue(mediator != undefined, "ViewTestMediator is not null");
     });
 
+    it("testHasMediator", () => {
+        // register a Mediator
+        let view = puremvc.View.getInstance("ViewTestKey4", key => new puremvc.View(key));
+
+        // Create and register the test mediator
+        let mediator = new puremvc.Mediator("hasMediatorTest", this);
+        view.registerMediator(mediator);
+
+        // assert that the view.hasMediator method returns true
+        // for that mediator name
+        assert.isTrue(view.hasMediator("hasMediatorTest") == true, "Expecting view.hasMediator('hasMediatorTest') == true");
+
+        view.removeMediator("hasMediatorTest");
+
+        // assert that the view.hasMediator method returns false
+        // for that mediator name
+        assert.isTrue(view.hasMediator("hasMediatorTest") == false, "Expecting view.hasMediator('hasMediatorTest') == false");
+    });
+
+    /**
+     * Tests registering and removing a mediator
+     */
+    it("testRegisterAndRemoveMediator", () => {
+        // Get the Multiton View instance
+        let view = puremvc.View.getInstance("ViewTestKey5", key => new puremvc.View(key));
+
+        // Create and register the test mediator
+        let mediator = new puremvc.Mediator("testing", this);
+        view.registerMediator(mediator);
+
+        // Remove the component
+        let removedMediator = view.removeMediator("testing");
+
+        // assert that we have removed the appropriate mediator
+        assert.isTrue(removedMediator.getMediatorName() == "testing", "Expecting removedMediator.getMediatorName() == 'testing'");
+
+        // assert that the mediator is no longer retrievable
+        assert.isTrue(view.retrieveMediator("testing") == null, "Expecting removedMediator.getMediatorName() == 'testing'");
+    });
+
+    /**
+     * Tests that the View callse the onRegister and onRemove methods
+     */
+    it("testOnRegisterAndOnRemove", () => {
+        let viewTest = {
+            onRegisterCalled: false,
+            onRemoveCalled: false
+        };
+
+        // Get the Multiton View instance
+        let view = puremvc.View.getInstance("ViewTestKey6", key => new puremvc.View(key));
+
+        // Create and register the test mediator
+        let mediator = new ViewTestMediator4(viewTest);
+        view.registerMediator(mediator);
+
+        // assert that onRegsiter was called, and the mediator responded by setting our boolean
+        assert.isTrue(viewTest.onRegisterCalled, "Expecting onRegisterCalled == true");
+
+        // Remove the component
+        view.removeMediator(ViewTestMediator4.NAME);
+
+        // assert that the mediator is no longer retrievable
+        assert.isTrue(viewTest.onRemoveCalled, "Expecting onRemoveCalled == true");
+    });
+
+    /**
+     * Tests successive register and remove of same mediator.
+     */
+    it("testSuccessiveRegisterAndRemoveMediator", () => {
+        // Get the Multiton View instance
+        let view = puremvc.View.getInstance("ViewTestKey7", key => new puremvc.View(key));
+
+        // Create and register the test mediator,
+        // but not so we have a reference to it
+        view.registerMediator(new ViewTestMediator({}));
+
+        // test that we can retrieve it
+        assert.isTrue(view.retrieveMediator(ViewTestMediator.NAME) != null, "Expecting view.retrieveMediator(ViewTestMediator.NAME) != null");
+
+        // Remove the Mediator
+        view.removeMediator(ViewTestMediator.NAME);
+
+        // test that retrieving it now returns null
+        assert.isTrue(view.retrieveMediator(ViewTestMediator.NAME) == null, "Expecting view.retrieveMediator(ViewTestMediator.NAME) == null");
+
+        // test that removing the mediator again once its gone doesn't cause crash
+        assert.isTrue(view.retrieveMediator(ViewTestMediator.NAME) == null, "Expecting view.retrieveMediator(ViewTestMediator.NAME) doesn't crash");
+
+        // Create and register another instance of the test mediator,
+        view.registerMediator(new ViewTestMediator({}));
+
+        assert.isTrue(view.retrieveMediator(ViewTestMediator.NAME) != null, "view.retrieveMediator(ViewTestMediator.NAME) != null");
+
+        // Remove the Mediator
+        view.removeMediator(ViewTestMediator.NAME);
+    });
+
+    /**
+     * Tests registering a Mediator for 2 different notifications, removing the
+     * Mediator from the View, and seeing that neither notification causes the
+     * Mediator to be notified. Added for the fix deployed in version 1.7
+     */
+    it("testRemoveMediatorAndSubsequentNotify", () => {
+        let viewTest = {
+            lastNotification: ""
+        };
+
+        // Get the Multiton View instance
+        let view = puremvc.View.getInstance("ViewTestKey8", key => new puremvc.View(key));
+
+        // Create and register the test mediator to be removed.
+        view.registerMediator(new ViewTestMediator2(viewTest));
+
+        // test that notifications work
+        view.notifyObservers(new puremvc.Notification(ViewTest.NOTE1))
+        assert.isTrue(viewTest.lastNotification == ViewTest.NOTE1, "Expecting lastNotification == NOTE1");
+
+        view.notifyObservers(new puremvc.Notification(ViewTest.NOTE2));
+        assert.isTrue(viewTest.lastNotification == ViewTest.NOTE2);
+
+        // Remove the Mediator
+        view.removeMediator(ViewTestMediator2.NAME);
+
+        // test that retrieving it now returns null
+        assert.isTrue(view.retrieveMediator( ViewTestMediator2.NAME ) == null, "Expecting view.retrieveMediator( ViewTestMediator2.NAME ) == null");
+
+        // test that notifications no longer work
+        // (ViewTestMediator2 is the one that sets lastNotification
+        // on this component, and ViewTestMediator)
+        viewTest.lastNotification = null;
+
+        view.notifyObservers(new puremvc.Notification(ViewTest.NOTE1))
+        assert.isTrue(viewTest.lastNotification != ViewTest.NOTE1, "Expecting lastNotification == NOTE1");
+
+        view.notifyObservers(new puremvc.Notification(ViewTest.NOTE2))
+        assert.isTrue(viewTest.lastNotification != ViewTest.NOTE2, "Expecting lastNotification == NOTE2");
+    });
+
+    it("testRemoveOneOfTwoMediatorsAndSubsequentNotify", () => {
+        let viewTest = { lastNotification: "" };
+
+        // Get the Multiton View instance
+        let view = puremvc.View.getInstance("ViewTestKey9", key => new puremvc.View(key));
+
+        // Create and register that responds to notifications 1 and 2
+        view.registerMediator(new ViewTestMediator2(viewTest));
+
+        // Create and register that responds to notification 3
+        view.registerMediator(new ViewTestMediator3(viewTest));
+
+        // test that all notifications work
+        view.notifyObservers(new puremvc.Notification(ViewTest.NOTE1));
+        assert.isTrue(viewTest.lastNotification == ViewTest.NOTE1, "Expecting lastNotification == NOTE1");
+
+        view.notifyObservers(new puremvc.Notification(ViewTest.NOTE2));
+        assert.isTrue(viewTest.lastNotification == ViewTest.NOTE2, "Expecting lastNotification == NOTE2");
+
+        view.notifyObservers(new puremvc.Notification(ViewTest.NOTE3));
+        assert.isTrue(viewTest.lastNotification == ViewTest.NOTE3, "Expecting lastNotification == NOTE3");
+
+        // Remove the Mediator that responds to 1 and 2
+        view.removeMediator(ViewTestMediator2.NAME);
+
+        // test that retrieving it now returns null
+        assert.isTrue(view.retrieveMediator(ViewTestMediator2.NAME) == null, "Expecting view.retrieveMediator(ViewTestMediator2.NAME) != null");
+
+        // test that notifications no longer work
+        // for notifications 1 and 2, but still work for 3
+        viewTest.lastNotification = null;
+
+        view.notifyObservers(new puremvc.Notification(ViewTest.NOTE1));
+        assert.isTrue(viewTest.lastNotification != ViewTest.NOTE1, "Expecting lastNotification != NOTE1");
+
+        view.notifyObservers(new puremvc.Notification(ViewTest.NOTE2));
+        assert.isTrue(viewTest.lastNotification != ViewTest.NOTE2, "Expecting lastNotification != NOTE2");
+
+        view.notifyObservers(new puremvc.Notification(ViewTest.NOTE3));
+        assert.isTrue(viewTest.lastNotification == ViewTest.NOTE3, "Expecting lastNotification == NOTE3");
+    });
+
+    /**
+     * Tests registering the same mediator twice.
+     * A subsequent notification should only illicit
+     * one response. Also, since reregistration
+     * was causing 2 observers to be created, ensure
+     * that after removal of the mediator there will
+     * be no further response.
+     */
+    it("testMediatorReregistration", () => {
+        let viewTest = {
+            counter: 0,
+        }
+
+        // Get the Multiton View instance
+        let view = puremvc.View.getInstance("ViewTestKey10", key => new puremvc.View(key));
+
+        // Create and register that responds to notification 5
+        view.registerMediator(new ViewTestMediator5(viewTest));
+
+        // try to register another instance of that mediator (uses the same NAME constant).
+        view.registerMediator(new ViewTestMediator5(viewTest));
+
+        // test that the counter is only incremented once (mediator 5's response)
+        viewTest.counter = 0;
+        view.notifyObservers(new puremvc.Notification(ViewTest.NOTE5));
+        assert.isTrue(viewTest.counter === 1, "Expecting counter == 1");
+
+        // Remove the Mediator
+        view.removeMediator(ViewTestMediator5.NAME);
+
+        // test that retrieving it now returns null
+        assert.isTrue(view.retrieveMediator(ViewTestMediator5.NAME) == null, "Expecting view.retrieveMediator(ViewTestMediator5.NAME) == null");
+
+        // test that the counter is no longer incremented
+        viewTest.counter = 0;
+        view.notifyObservers(new puremvc.Notification(ViewTest.NOTE5));
+        assert.isTrue(viewTest.counter === 0, "Expecting counter == 0");
+    });
+
+    /**
+     * Tests the ability for the observer list to
+     * be modified during the process of notification,
+     * and all observers be properly notified. This
+     * happens most often when multiple Mediators
+     * respond to the same notification by removing
+     * themselves.
+     */
+    it("testModifyObserverListDuringNotification", () => {
+        let viewTest = {
+            counter: 0,
+        }
+
+        // Get the Multiton View instance
+        let view = puremvc.View.getInstance("ViewTestKey11", key => new puremvc.View(key));
+
+        // Create and register several mediator instances that respond to notification 6
+        // by removing themselves, which will cause the observer list for that notification
+        // to change. versions prior to MultiCore Version 2.0.5 will see every other mediator
+        // fails to be notified.
+        view.registerMediator(new ViewTestMediator6(ViewTestMediator6.NAME + "/1", viewTest));
+        view.registerMediator(new ViewTestMediator6(ViewTestMediator6.NAME + "/2", viewTest));
+        view.registerMediator(new ViewTestMediator6(ViewTestMediator6.NAME + "/3", viewTest));
+        view.registerMediator(new ViewTestMediator6(ViewTestMediator6.NAME + "/4", viewTest));
+        view.registerMediator(new ViewTestMediator6(ViewTestMediator6.NAME + "/5", viewTest));
+        view.registerMediator(new ViewTestMediator6(ViewTestMediator6.NAME + "/6", viewTest));
+        view.registerMediator(new ViewTestMediator6(ViewTestMediator6.NAME + "/7", viewTest));
+        view.registerMediator(new ViewTestMediator6(ViewTestMediator6.NAME + "/8", viewTest));
+
+        // clear the counter
+        viewTest.counter = 0;
+
+        // send the notification. each of the above mediators will respond by removing
+        // themselves and incrementing the counter by 1. This should leave us with a
+        // count of 8, since 8 mediators will respond.
+        view.notifyObservers(new puremvc.Notification(ViewTest.NOTE6));
+
+        // verify the count is correct
+        assert.isTrue(viewTest.counter === 8, "Expecting counter == 8");
+
+        // clear the counter
+        viewTest.counter = 0;
+        view.notifyObservers(new puremvc.Notification(ViewTest.NOTE6));
+        // verify the count is 0
+        assert.isTrue(viewTest.counter === 0, "Expecting counter == 0");
+    });
 
     /**
      * A test variable that proves the viewTestMethod was
@@ -396,6 +761,7 @@ describe("ViewTest", () => {
         viewTestVar = notification.getBody();
     }
 });
+
 
 /**
  * A Mediator class used by ViewTest.
@@ -482,12 +848,21 @@ class ViewTestMediator3 extends puremvc.Mediator {
     }
 
     /**
+     * @override
+     * @param notification
+     */
+    handleNotification(notification) {
+        this.getViewComponent().lastNotification = notification.getName();
+    }
+
+    /**
      * The Mediator name
      * @returns {string}
      */
     static get NAME() { return "ViewTestMediator3" }
 
 }
+
 
 class ViewTestMediator4 extends puremvc.Mediator {
 
@@ -572,10 +947,11 @@ class ViewTestMediator5 extends puremvc.Mediator {
 
 }
 
+
 class ViewTestMediator6 extends puremvc.Mediator {
 
-    constructor(view) {
-        super(ViewTestMediator6.NAME, view);
+    constructor(name, view) {
+        super(name, view);
     }
 
     listNotificationInterests() {
@@ -608,6 +984,7 @@ class ViewTestMediator6 extends puremvc.Mediator {
 
 }
 
+
 /**
  *
  * @extends Notification
@@ -637,6 +1014,12 @@ class ViewTestNote extends puremvc.Notification {
     static get NAME() { return "ViewTestNote" }
 }
 
+/**
+ * Test the PureMVC Facade class.
+ *
+ * @see FacadeTestVO
+ * @see FacadeTestCommand
+ */
 describe("FacadeTest", () => {
 
     /**
@@ -650,6 +1033,18 @@ describe("FacadeTest", () => {
         assert.isTrue(facade != null, "");
     });
 
+    /**
+     * Tests Command registration and execution via the Facade.
+     *
+     * <P>This test gets a Multiton Facade instance
+     * and registers the FacadeTestCommand class
+     * to handle 'FacadeTest' Notifications.<P>
+     *
+     * <P>It then sends a notification using the Facade.
+     * Success is determined by evaluating
+     * a property on an object placed in the body of
+     * the Notification, which will be modified by the Command.</P>
+     */
     it("should testRegisterCommandAndSendNotification", () => {
         // Create the Facade, register the FacadeTestCommand to
         // handle 'FacadeTest' notifications
@@ -666,6 +1061,18 @@ describe("FacadeTest", () => {
         assert.isTrue(vo.result == 64, "Expecting vo.result == 64");
     });
 
+    /**
+     * Tests Command removal via the Facade.
+     *
+     * <P>This test gets a Multiton Facade instance
+     * and registers the FacadeTestCommand class
+     * to handle 'FacadeTest' Notifications. Then it removes the command.<P>
+     *
+     * <P>It then sends a Notification using the Facade.
+     * Success is determined by evaluating
+     * a property on an object placed in the body of
+     * the Notification, which will NOT be modified by the Command.</P>
+     */
     it("should testRegisterAndRemoveCommandAndSendNotification", () => {
         // Create the Facade, register the FacadeTestCommand to
         // handle 'FacadeTest' events
@@ -683,6 +1090,14 @@ describe("FacadeTest", () => {
         assert.isTrue(vo.result != 64, "Expecting vo.result != 64")
     });
 
+    /**
+     * Tests the regsitering and retrieving Model proxies via the Facade.
+     *
+     * <P>Tests <code>registerProxy</code> and <code>retrieveProxy</code> in the same test.
+     * These methods cannot currently be tested separately
+     * in any meaningful way other than to show that the
+     * methods do not throw exception when called.</P>
+     */
     it("should testRegisterAndRetrieveProxy", () => {
         // register a proxy and retrieve it.
         let facade = puremvc.Facade.getInstance("FacadeTestKey4", key => new puremvc.Facade(key));
@@ -703,6 +1118,9 @@ describe("FacadeTest", () => {
         assert.isTrue(data[2] == "blue", "Expecting data[2] == 'blue'");
     });
 
+    /**
+     * Tests the removing Proxies via the Facade.
+     */
     it("should testRegisterAndRemoveProxy", () => {
         // register a proxy, remove it, then try to retrieve it
         let facade = puremvc.Facade.getInstance("FacadeTestKey5", key => new puremvc.Facade(key));
@@ -722,6 +1140,9 @@ describe("FacadeTest", () => {
         assert.isUndefined(proxy, "Expecting proxy is null");
     });
 
+    /**
+     * Tests registering, retrieving and removing Mediators via the Facade.
+     */
     it("should testRegisterRetrieveAndRemoveMediator", () => {
         // register a mediator, remove it, then try to retrieve it
         let facade = puremvc.Facade.getInstance("FacadeTestKey6", key => new puremvc.Facade(key));
@@ -740,6 +1161,9 @@ describe("FacadeTest", () => {
         assert.isTrue(facade.retrieveMediator(puremvc.Mediator.NAME) == null, "Expecting facade.retrieveMediator( Mediator.NAME ) == null )")
     });
 
+    /**
+     * Tests the hasProxy Method
+     */
     it("should testHasProxy", () => {
         // register a Proxy
         let facade = puremvc.Facade.getInstance("FacadeTestKey7", key => new puremvc.Facade(key));
@@ -750,6 +1174,9 @@ describe("FacadeTest", () => {
         assert.isTrue(facade.hasProxy("hasProxyTest") == true, "Expecting facade.hasProxy('hasProxyTest') == true");
     });
 
+    /**
+     * Tests the hasMediator Method
+     */
     it("should testHasMediator", () => {
         // register a Mediator
         let facade = puremvc.Facade.getInstance("FacadeTestKey8", key => new puremvc.Facade(key));
@@ -766,6 +1193,9 @@ describe("FacadeTest", () => {
         assert.isTrue(facade.hasMediator("facadeHasMediatorTest") == false, "Expecting facade.hasMediator('facadeHasMediatorTest') == false");
     });
 
+    /**
+     * Test hasCommand method.
+     */
     it("should testHasCommand", () => {
         // register the ControllerTestCommand to handle 'hasCommandTest' notes
         let facade = puremvc.Facade.getInstance("FacadeTestKey10", key => new puremvc.Facade(key));
@@ -781,6 +1211,9 @@ describe("FacadeTest", () => {
         assert.isTrue(facade.hasCommand("facadeTestCommand") == false, "Expecting facade.hasCommand('facadeHasCommandTest') == false");
     });
 
+    /**
+     * Tests the hasCore and removeCore methods
+     */
     it("should testHasCoreAndRemoveCore", () => {
         // assert that the Facade.hasCore method returns false first
         assert.isTrue(puremvc.Facade.hasCore("FacadeTestKey11") == false, "Expecting facade.hasCore('FacadeTestKey11') == false");
@@ -800,12 +1233,23 @@ describe("FacadeTest", () => {
 
 });
 
+
 /**
+ * A SimpleCommand subclass used by FacadeTest.
+ *
+ * @see FacadeTest
+ * @see FacadeTestVO
+ *
  * @class FacadeTestCommand
  * @extends puremvc.SimpleCommand
  */
 class FacadeTestCommand extends puremvc.SimpleCommand {
 
+    /**
+     * Fabricate a result by multiplying the input by 2
+     *
+     * @param {puremvc.INotification} notification the Notification carrying the FacadeTestVO
+     */
     execute(notification) {
         /** @type FacadeTestVO */
         let vo = notification.getBody();
@@ -816,6 +1260,7 @@ class FacadeTestCommand extends puremvc.SimpleCommand {
 
 }
 
+
 /**
  * A utility class used by FacadeTest.
  *
@@ -825,7 +1270,7 @@ class FacadeTestVO {
 
     /**
      * @constructor
-     * @param input the number to be fed to the FacadeTestCommand
+     * @param {number} input the number to be fed to the FacadeTestCommand
      */
     constructor(input) {
         this.input = input;
@@ -834,8 +1279,42 @@ class FacadeTestVO {
 
 }
 
+
+/**
+ * Test the PureMVC SimpleCommand class.
+ *
+ * @see MacroCommandTestVO
+ * @see MacroCommandTestCommand
+ */
 describe("MacroCommandTest", () => {
 
+    /**
+     * Tests operation of a <code>MacroCommand</code>.
+     *
+     * <P>This test creates a new <code>Notification</code>, adding a
+     * <code>MacroCommandTestVO</code> as the body.
+     * It then creates a <code>MacroCommandTestCommand</code> and invokes
+     * its <code>execute</code> method, passing in the
+     * <code>Notification</code>.</P>
+     *
+     * <P>The <code>MacroCommandTestCommand</code> has defined an
+     * <code>initializeMacroCommand</code> method, which is
+     * called automatically by its constructor. In this method
+     * the <code>MacroCommandTestCommand</code> adds 2 SubCommands
+     * to itself, <code>MacroCommandTestSub1Command</code> and
+     * <code>MacroCommandTestSub2Command</code>.</P>
+     *
+     * <P>The <code>MacroCommandTestVO</code> has 2 result properties,
+     * one is set by <code>MacroCommandTestSub1Command</code> by
+     * multiplying the input property by 2, and the other is set
+     * by <code>MacroCommandTestSub2Command</code> by multiplying
+     * the input property by itself.</P>
+     *
+     * <P>Success is determined by evaluating the 2 result properties
+     * on the <code>MacroCommandTestVO</code> that was passed to
+     * the <code>MacroCommandTestCommand</code> on the Notification
+     * body.</P>
+     */
     it("should testMacroCommandExecute", () => {
         // Create the VO
         let vo = new MacroCommandTestVO(5);
@@ -856,12 +1335,24 @@ describe("MacroCommandTest", () => {
 
 });
 
+
 /**
+ * A MacroCommand subclass used by MacroCommandTest.
+ *
+ * @see MacroCommandTest
+ * @see MacroCommandTestSub1Command
+ * @see MacroCommandTestSub2Command
+ * @see MacroCommandTestVO
+ *
  * @class MacroCommandTestCommand
  * @extends puremvc.MacroCommand
  */
 class MacroCommandTestCommand extends puremvc.MacroCommand {
 
+    /**
+     * Initialize the MacroCommandTestCommand by adding
+     * its 2 SubCommands.
+     */
     initializeMacroCommand() {
         this.addSubCommand(() => new MacroCommandTestSub1Command());
         this.addSubCommand(() => new MacroCommandTestSub2Command());
@@ -869,7 +1360,14 @@ class MacroCommandTestCommand extends puremvc.MacroCommand {
 
 }
 
+
 /**
+ * A SimpleCommand subclass used by MacroCommandTestCommand.
+ *
+ * @see MacroCommandTest
+ * @see MacroCommandTestCommand
+ * @see MacroCommandTestVO
+ *
  * @class MacroCommandTestSub1Command
  * @extends puremvc.SimpleCommand
  * @implements ICommand
@@ -879,7 +1377,7 @@ class MacroCommandTestSub1Command extends puremvc.SimpleCommand {
     /**
      * Fabricate a result by multiplying the input by 2
      *
-     * @param {puremvc.INotification} notification
+     * @param {puremvc.INotification} notification event the <code>IEvent</code> carrying the <code>MacroCommandTestVO</code>
      */
     execute(notification) {
         /** @type MacroCommandTestVO */
@@ -890,7 +1388,14 @@ class MacroCommandTestSub1Command extends puremvc.SimpleCommand {
     }
 }
 
+
 /**
+ * A SimpleCommand subclass used by MacroCommandTestCommand.
+ *
+ * @see MacroCommandTest
+ * @see MacroCommandTestCommand
+ * @see MacroCommandTestVO
+ *
  * @class MacroCommandTestSub2Command
  * @extends puremvc.SimpleCommand
  * @implements ICommand
@@ -900,7 +1405,7 @@ class MacroCommandTestSub2Command extends puremvc.SimpleCommand {
     /**
      * Fabricate a result by multiplying the input by itself
      *
-     * @param {puremvc.INotification} notification
+     * @param {puremvc.INotification} notification event the <code>IEvent</code> carrying the <code>MacroCommandTestVO</code>
      */
     execute(notification) {
         /** @type MacroCommandTestVO */
@@ -911,14 +1416,23 @@ class MacroCommandTestSub2Command extends puremvc.SimpleCommand {
     }
 }
 
+
 /**
+ * A utility class used by MacroCommandTest.
+ *
+ * @see MacroCommandTest
+ * @see MacroCommandTestCommand
+ * @see MacroCommandTestSub1Command
+ * @see MacroCommandTestSub2Command
+ *
  * @class MacroCommandTestVO
  */
 class MacroCommandTestVO {
 
     /**
+     * Constructor.
      *
-     * @param {number} input
+     * @param {number} input the number to be fed to the MacroCommandTestCommand
      */
     constructor(input) {
         this.input = input;
@@ -928,8 +1442,27 @@ class MacroCommandTestVO {
 
 }
 
+
+/**
+ * Test the PureMVC SimpleCommand class.
+ *
+ * @see SimpleCommandTestVO
+ * @see SimpleCommandTestCommand
+ */
 describe("SimpleCommandTest", () => {
 
+    /**
+     * Tests the <code>execute</code> method of a <code>SimpleCommand</code>.
+     *
+     * <P>This test creates a new <code>Notification</code>, adding a
+     * <code>SimpleCommandTestVO</code> as the body.
+     * It then creates a <code>SimpleCommandTestCommand</code> and invokes
+     * its <code>execute</code> method, passing in the note.</P>
+     *
+     * <P>Success is determined by evaluating a property on the
+     * object that was passed on the Notification body, which will
+     * be modified by the SimpleCommand</P>.
+     */
     it("should testSimpleCommandExecute", () => {
         // Create the VO
         let vo = new SimpleCommandTestVO(5);
@@ -944,17 +1477,25 @@ describe("SimpleCommandTest", () => {
         command.execute(note);
 
         // test assertions
-        assert.isTrue(vo.getResult() == 10, "Expecting vo.result == 10");
+        assert.isTrue(vo.getResult() === 10, "Expecting vo.result == 10");
     });
 
 });
 
+
 /**
+ * A SimpleCommand subclass used by SimpleCommandTest.
+ *
  * @class SimpleCommandTestCommand
  * @extends puremvc.SimpleCommand
  */
 class SimpleCommandTestCommand extends puremvc.SimpleCommand {
 
+    /**
+     * Fabricate a result by multiplying the input by 2
+     *
+     * @param {puremvc.INotification} notification event the <code>INotification</code> carrying the <code>SimpleCommandTestVO</code>
+     */
     execute(notification) {
         /** @type {SimpleCommandTestVO} */
         let vo = notification.body;
@@ -965,7 +1506,13 @@ class SimpleCommandTestCommand extends puremvc.SimpleCommand {
 
 }
 
+
 /**
+ * A utility class used by SimpleCommandTest.
+ *
+ * @see SimpleCommandTest
+ * @see SimpleCommandTestCommand
+ *
  * @class SimpleCommandTestVO
  */
 class SimpleCommandTestVO {
@@ -997,6 +1544,13 @@ class SimpleCommandTestVO {
 
 }
 
+
+/**
+ * Test the PureMVC Mediator class.
+ *
+ * @see IMediator
+ * @see Mediator
+ */
 describe("MediatorTest", () => {
 
     /**
@@ -1010,6 +1564,9 @@ describe("MediatorTest", () => {
         assert.equal(mediator.getMediatorName(), puremvc.Mediator.NAME, "Expecting mediator.getMediatorName() == Mediator.NAME");
     });
 
+    /**
+     * Tests getting the name using Mediator class accessor method.
+     */
     it("should testViewAccessor", () => {
         // Create a view object
         let view = new Object();
@@ -1023,6 +1580,12 @@ describe("MediatorTest", () => {
 
 });
 
+
+/**
+ * Test the PureMVC Notification class.
+ *
+ * @see Notification
+ */
 describe("NotificationTest", () => {
 
     /**
@@ -1076,6 +1639,18 @@ describe("NotificationTest", () => {
 
 });
 
+
+/**
+ * Tests PureMVC Observer class.
+ *
+ * <P>Since the Observer encapsulates the interested object's
+ * callback information, there are no getters, only setters.
+ * It is, in effect write-only memory.</P>
+ *
+ * <P>Therefore, the only way to test it is to set the
+ * notification method and context and call the notifyObserver
+ * method.</P>
+ */
 describe("ObserverTest", () => {
 
     /**
@@ -1157,6 +1732,13 @@ describe("ObserverTest", () => {
 
 });
 
+
+/**
+ * Test the PureMVC Proxy class.
+ *
+ * @see IProxy
+ * @see Proxy
+ */
 describe("ProxyTest", () => {
 
     /**
@@ -1202,4 +1784,5 @@ describe("ProxyTest", () => {
     });
 
 });
+
 

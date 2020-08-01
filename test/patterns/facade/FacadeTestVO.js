@@ -7,7 +7,7 @@ class FacadeTestVO {
 
     /**
      * @constructor
-     * @param input the number to be fed to the FacadeTestCommand
+     * @param {number} input the number to be fed to the FacadeTestCommand
      */
     constructor(input) {
         this.input = input;

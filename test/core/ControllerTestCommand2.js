@@ -1,6 +1,9 @@
 /**
  * A SimpleCommand subclass used by ControllerTest.
  *
+ * @see ControllerTest
+ * @see ControllerTestVO
+ *
  * @class ControllerTestCommand2
  */
 class ControllerTestCommand2 extends puremvc.SimpleCommand {

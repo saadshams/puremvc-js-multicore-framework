@@ -1,7 +1,7 @@
 class ViewTestMediator6 extends puremvc.Mediator {
 
-    constructor(view) {
-        super(ViewTestMediator6.NAME, view);
+    constructor(name, view) {
+        super(name, view);
     }
 
     listNotificationInterests() {

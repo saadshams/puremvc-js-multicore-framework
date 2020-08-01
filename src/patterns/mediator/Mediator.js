@@ -1,4 +1,11 @@
 /**
+ * A base <code>IMediator</code> implementation.
+ *
+ * @see puremvc.View View
+ *
+ * @typedef {puremvc.Mediator} Mediator
+ * @typedef {puremvc.Notifier} Notifier
+ *
  * @class puremvc.Mediator
  * @extends puremvc.Notifier
  * @implements puremvc.IMediator
@@ -6,12 +13,13 @@
 class Mediator extends Notifier {
 
     /**
+     * Constructor.
      *
      * @constructor
      * @param {string} mediatorName
-     * @param {*} [viewComponent]
+     * @param {Object} [viewComponent] viewComponent
      */
-    constructor(mediatorName, viewComponent) {
+    constructor(mediatorName, viewComponent = null) {
         super();
         /** @private */
         this.mediatorName = mediatorName || Mediator.NAME;
@@ -20,22 +28,22 @@ class Mediator extends Notifier {
     }
 
     /**
-     *
-     * @return {void}
+     * Called by the View when the Mediator is registered
      */
     onRegister() {
 
     }
 
     /**
-     *
-     * @return {void}
+     * Called by the View when the Mediator is removed
      */
     onRemove() {
 
     }
 
     /**
+     * List the <code>INotification</code> names this
+     * <code>Mediator</code> is interested in being notified of.
      *
      * @returns {[string]}
      */
@@ -44,15 +52,21 @@ class Mediator extends Notifier {
     }
 
     /**
+     * Handle <code>INotification</code>s.
+     *
+     * <P>
+     * Typically this will be handled in a switch statement,
+     * with one 'case' entry per <code>INotification</code>
+     * the <code>Mediator</code> is interested in.
      *
      * @param {puremvc.INotification} notification
-     * @return {void}
      */
     handleNotification(notification) {
 
     }
 
     /**
+     * the mediator name
      *
      * @returns {string}
      */
@@ -61,23 +75,34 @@ class Mediator extends Notifier {
     }
 
     /**
+     * Get the <code>Mediator</code>'s view component.
      *
-     * @returns {*}
+     * <P>
+     * Additionally, an implicit getter will usually
+     * be defined in the subclass that casts the view
+     * object to a type, like this:</P>
+     *
+     * @returns {Object}
      */
     getViewComponent() {
         return this.viewComponent;
     }
 
     /**
+     * Set the <code>IMediator</code>'s view component.
      *
-     * @param {*} viewComponent
-     * @return {void}
+     * @param {Object} viewComponent
      */
     setViewComponent(viewComponent) {
         this.viewComponent = viewComponent;
     }
 
     /**
+     * The name of the <code>Mediator</code>.
+     *
+     * <P>Typically, a <code>Mediator</code> will be written to serve
+     * one specific control or group controls and so,
+     * will not have a need to be dynamically named.</P>
      *
      * @static
      * @returns {string}

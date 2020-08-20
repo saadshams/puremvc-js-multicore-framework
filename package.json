@@ -1,32 +1,58 @@
 {
-  "name": "puremvc-js-multicore-framework",
-  "version": "2.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "test": "test"
+  "name": "org.puremvc.multicore",
+  "version": "2.0.0-b2",
+  "exports": "./out/org.puremvc.multicore/2.0.0-b2/org.puremvc.multicore.js",
+  "type": "module",
+  "engines": {
+    "node": ">= 13.0.0"
   },
+  "description": "",
   "scripts": {
-    "build": "webpack --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run clean && npm run build:lib && npm run build:doc",
+    "build:lib": "rollup -c tool/rollupjs/build.js",
+    "build:doc": "jsdoc -c tool/jsdoc/config.json -d ${npm_package_exports}/../doc/",
+    "clean": "rm -rf out tool/**/*.log",
+    "postinstall": "npm run clean && npm run build && npm run test",
+    "test": "npm run test:bdd && if test \"$NODE_ENV\" = \"staging\"; then npm run test:e2e; fi;",
+    "test:bdd": "mocha src/test/**/*.js --file tool/mocha/setup.js",
+    "test:e2e": "nightwatch -c tool/nightwatch/config.cjs"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/PureMVC/puremvc-js-multicore-framework.git"
   },
   "author": "Saad Shams <saad.shams@puremvc.org>",
-  "license": "CC-BY-3.0",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/PureMVC/puremvc-js-multicore-framework/issues"
   },
   "homepage": "http://puremvc.org",
+  "babel": {
+    "presets": [
+      "es2015"
+    ],
+    "plugins": [
+      "add-module-exports"
+    ]
+  },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "jsdoc": "^3.6.5",
-    "mocha": "^8.1.0",
-    "raw-loader": "^4.0.1",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12",
-    "webpack-raw-bundler": "^1.3.6"
-  }
+    "@rollup/plugin-multi-entry": "4.0.0",
+    "babel-core": "6.26.3",
+    "babel-plugin-add-module-exports": "1.0.2",
+    "babel-preset-es2015": "6.24.1",
+    "chai": "4.2.0",
+    "chromedriver": "84.0.1",
+    "geckodriver": "1.20.0",
+    "jsdoc": "3.6.5",
+    "minami": "1.2.3",
+    "mocha": "8.1.0",
+    "nightwatch": "1.3.7",
+    "rollup": "2.26.4",
+    "rollup-plugin-includepaths": "0.2.4",
+    "rollup-plugin-multi-entry": "2.1.0",
+    "rollup-plugin-terser": "7.0.0",
+    "sinon": "9.0.2",
+    "sinon-chai": "3.5.0"
+  },
+  "dependencies": {}
 }

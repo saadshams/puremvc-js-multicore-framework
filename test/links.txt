@@ -1,8 +1,0 @@
-https://devhints.io/jsdoc
-https://stackoverflow.com/questions/58357941/cannot-use-import-statement-outside-a-module
-https://blog.codeship.com/mocha-js-chai-sinon-frontend-javascript-code-testing-tutorial/
-https://medium.com/dailyjs/running-mocha-tests-as-native-es6-modules-in-a-browser-882373f2ecb0
-
-https://stackoverflow.com/questions/31907672/how-to-set-multiple-file-entry-and-output-in-project-with-webpack
-
-https://stackoverflow.com/questions/7327164/common-module-in-node-js-and-browser-javascript/7337518#7337518
